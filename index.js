@@ -17,7 +17,12 @@ firstJson.forEach(function(value, key) {
 
   const compiled = _.template(file)
 
-  value.body = _.escape(value.body)
+  if(value.body !== undefined){
+    var re = /"/g;
+    var str = value.body;
+    value.body = str.replace(re, '\\"');
+    console.log(value.body);
+  }
 
   fs.writeFileSync('composant/' + value.composant  + '_' + value._id +  '.json', compiled(value) , {encoding: 'utf8'})
 });
