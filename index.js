@@ -8,27 +8,16 @@ const workbook = XLSX.readFile('src/test.xlsx')
 
 const sheet_name_list = workbook.SheetNames
 
-// console.log(sheet_name_list);
 
 const firstJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]])
 
-console.log(firstJson)
-
-// if(firstJson.composant === 'media') {
-//   console.log('media')
-// }
 firstJson.forEach(function(value, key) {
-  console.log(key);
 
   const file = fs.readFileSync('model/' + value.composant + '.json', 'utf-8')
-  // console.log(file)
 
   const compiled = _.template(file)
-  // console.log(compiled)
-  // console.log(value)
+
   value.body = _.escape(value.body)
 
   fs.writeFileSync('composant/' + value.composant  + '_' + value._id +  '.json', compiled(value) , {encoding: 'utf8'})
 });
-//
-// console.log(firstJson)
