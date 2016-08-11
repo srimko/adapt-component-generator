@@ -1,0 +1,78 @@
+{
+  "_id":"<%= _id %>",
+  "_parentId": "",
+  "_type":"component",
+  "_component":"mediaMultiCam",
+  "_classes":"",
+  "_layout":"full",
+  "title": "<%= title %>",
+  "displayTitle": "<%= displayTitle %>",
+  "body": "<%= body %>",
+  "instruction": "",
+  "_setCompletionOn":"inview",
+  "_useClosedCaptions":true,
+  "_startLanguage":"en",
+  "poster": "<%= pathimage %>/<%= poster %>",
+  "_medias": [
+      {
+        "title": "<%= media1_title %>",
+        "source": "<%= pathvideo %>/<%= media1_source %>",
+        "type": "<%= media1_type %>"
+      },
+      {
+        "title": "<%= media2_title %>",
+        "source": "<%= pathvideo %>/<%= media2_source %>",
+        "type": "<%= media2_type %>"
+      },
+      {
+        "title": "<%= media3_title %>",
+        "source": "<%= pathvideo %>/<%= media3_source %>",
+        "type": "<%= media3_type %>"
+      },
+      {
+        "title": "<%= media4_title %>",
+        "source": "<%= pathvideo %>/<%= media4_source %>",
+        "type": "<%= media4_type %>"
+      }
+    ],
+    "_playerOptions": {
+        "poster": "",
+        "showPosterWhenEnded": false,
+        "defaultVideoWidth": 800,
+        "defaultVideoHeight": 450,
+        "videoWidth": -1,
+        "videoHeight": -1,
+        "defaultAudioWidth": 400,
+        "defaultAudioHeight": 30,
+        "defaultSeekBackwardInterval": "(media.duration * 0.05)",
+        "defaultSeekForwardInterval": "(media.duration * 0.05)",
+        "audioWidth": -1,
+        "audioHeight": -1,
+        "startVolume": 0.8,
+        "loop": false,
+        "autoRewind": true,
+        "enableAutosize": true,
+        "alwaysShowHours": false,
+        "showTimecodeFrameCount": false,
+        "framesPerSecond": 25,
+        "autosizeProgress" : true,
+        "alwaysShowControls": false,
+        "hideVideoControlsOnLoad": false,
+        "clickToPlayPause": true,
+        "iPadUseNativeControls": false,
+        "iPhoneUseNativeControls": false,
+        "AndroidUseNativeControls": false,
+        "features": ["playpause","current","progress","duration","tracks","volume","fullscreen"],
+        "isVideo": true,
+        "enableKeyboard": true,
+        "pauseOtherPlayers": true,
+        "startLanguage": "",
+        "tracksText": "mejs.i18n.t('Captions/Subtitles')",
+        "hideCaptionsButtonWhenEmpty": true,
+        "toggleCaptionsButtonWhenOnlyOne": false,
+        "slidesSelector": ""
+    },
+    "_pageLevelProgress": {
+    "_isEnabled": true
+  }
+}
