@@ -1,0 +1,63 @@
+{
+  "_id": "<%= _id %>",
+  "_parentId": "b-coupe-courte-10",
+  "_type": "component",
+  "_component": "adapt-yny-sequenceImgScrolling",
+  "_classes": "adapt-yny-sequenceImgScrolling",
+  "_layout": "full",
+  "title": "<%= title %>",
+  "displayTitle": "<%= displayTitle %>",
+  "body": "",
+  "repertory": "<%= pathimage %>",
+  "image_root": "<%= image_root %>",
+  "image_width":<%= image_width %>,
+  "image_height":<%= image_height %>,
+  "totalFrames":<%= totalFrames %>,
+  "pointers": [
+    {
+      "id":"p_1",
+      "flag":"1",
+      "start":20,
+      "end": 29,
+      "_top": 57,
+      "_left": 71.7,
+      "body": "<a href='#/id/c-coupe-courte-03' class='goToComponent' data-goToComponent='c-coupe-courte-03' ><img src='course/en/images/coupe-courte/link_plane/coupe_courte_plane_point1.png'/></a>",
+      "hotspot": {
+        "src": "course/en/images/coupe-courte/hotspot_espace/coupe_courte_geo_espace5.png",
+        "width": 190,
+        "height": 46
+      }
+    },
+    {
+      "id":"p_2",
+      "flag":"2",
+      "start":2,
+      "end":12,
+      "_top": 27,
+      "_left": 49,
+      "body": "<a href='#/id/c-coupe-courte-04' class='goToComponent' data-goToComponent='c-coupe-courte-04' ><img src='course/en/images/coupe-courte/link_plane/SEQUENCE_COUPE_COURTE_002.jpg'/></a>",
+      "hotspot": {
+        "src": "course/en/images/coupe-courte/hotspot_espace/coupe_courte_geo_espace6.png",
+        "width": 244,
+        "height": 46
+      }
+    },
+    {
+      "id":"p_3",
+      "flag":"3",
+      "start":65,
+      "end": 74,
+      "_top": 37.5,
+      "_left": 20.5,
+      "body": "<a href='#/id/c-coupe-courte-05' class='goToComponent' data-goToComponent='c-coupe-courte-05' ><img src='course/en/images/coupe-courte/link_plane/SEQUENCE_COUPE_COURTE_003.jpg'/></a>",
+      "hotspot": {
+        "src": "course/en/images/coupe-courte/hotspot_espace/coupe_courte_geo_espace7.png",
+        "width": 129,
+        "height": 80
+      }
+    }
+  ],
+      "_pageLevelProgress": {
+    "_isEnabled": true
+  }
+},
