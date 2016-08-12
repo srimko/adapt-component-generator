@@ -76,6 +76,7 @@ firstJson.forEach(function(value, key) {
     }
   }
   else {
+    // TODO : Etendre le systeme pour le model media
     var file = fs_extra.readJsonSync('model/' + value.composant + '.json', 'utf-8')
 
     // On reset les variable
