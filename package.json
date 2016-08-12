@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "fs-extra": "^0.30.0",
     "lodash": "^4.14.2",
     "xlsx": "^0.8.0"
   }
