@@ -1,0 +1,26 @@
+{
+  "_id":"<%= _id %>",
+  "_parentId": "<%= _parentId %>",
+  "_type":"component",
+  "_component":"narrative",
+  "_classes":"",
+  "_layout":"full",
+  "title": "<%= title %>",
+  "displayTitle": "<%= displayTitle %>",
+  "body": "<%= body %>",
+  "instruction": "",
+  "_hasNavigationInTextArea": false,
+  "mobileInstruction": "",
+  "_setCompletionOn":"allItems",
+  "_items": [
+    {
+       "title": "Narrative stage 1 title",
+       "body": "This is display text 1. If viewing on desktop or tablet, this text will appear to the right of the image. On mobile, you’ll need to select the plus icon to reveal this text.",
+       "_graphic": {
+           "src": "course/en/images/single_width.jpg",
+           "alt": "First graphic"
+       },
+       "strapline": "Here is the first..."
+    }
+  ]
+}
