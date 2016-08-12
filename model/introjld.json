@@ -1,6 +1,6 @@
 {
   "_id":"<%= _id %>",
-  "_parentId": "",
+  "_parentId": "<%= _parentId %>",
   "_type":"component",
   "_component":"intro-jld",
   "_classes":"",

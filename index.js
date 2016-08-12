@@ -19,9 +19,11 @@ firstJson.forEach(function(value, key) {
 
   const compiled = _.template(file)
 
-  // console.log(value._id);
-  // console.log(value.body);
-  // console.log(value.pathvideo);
+  // Ajout du parentId il est calculer grace à l'id du composant
+  _parentId = value._id.split('-')
+  _parentId[0] = 'b'
+  _parentId = _parentId.join('-')
+  value._parentId = _parentId
 
   if(value.body !== undefined) {
     var re = /"/g;

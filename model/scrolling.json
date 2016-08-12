@@ -1,6 +1,6 @@
 {
   "_id": "<%= _id %>",
-  "_parentId": "b-coupe-courte-10",
+  "_parentId": "<%= _parentId %>",
   "_type": "component",
   "_component": "adapt-yny-sequenceImgScrolling",
   "_classes": "adapt-yny-sequenceImgScrolling",
