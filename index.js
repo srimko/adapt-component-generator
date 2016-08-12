@@ -11,7 +11,7 @@ const sheet_name_list = workbook.SheetNames
 
 const firstJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]])
 
-
+var component_result = ''
 
 firstJson.forEach(function(value, key) {
 
@@ -49,7 +49,9 @@ firstJson.forEach(function(value, key) {
   value.media4_source  !== undefined ? (value.media4_source=value.media4_source) : (value.media4_source = '')
   value.media4_type  !== undefined ? (value.media4_type=value.media4_type) : (value.media4_type = '')
 
-  
+  component_result += compiled(value)
 
   fs.writeFileSync('composant/' + value.composant  + '_' + value._id +  '.json', compiled(value) , {encoding: 'utf8'})
 });
+
+fs.writeFileSync('composant/component_result.json', component_result , {encoding: 'utf8'})
