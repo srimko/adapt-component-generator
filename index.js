@@ -2,17 +2,18 @@ const fs = require('fs')
 const fs_extra = require('fs-extra')
 const _ = require('lodash')
 const XLSX = require('xlsx')
+const jsonFormat = require('json-format')
 
 const fileName = process.argv[2] || 'src/Liste_composant.xlsx'
 
-const workbook = XLSX.readFile('src/Liste_composant.xlsx')
+const workbook = XLSX.readFile(fileName)
 
 const sheet_name_list = workbook.SheetNames
 
 // TODO : Faire la fonction qui génère le block.json en même temps que component
 // TODO : Faire une fonction qui permet de générer les composants et le component_result dans un dossier pour chaque page.
 
-// Pour changer de page il faut changer l'indice dans le sheet_name_list ex: 0 pour la page 1, 2 pour la page 3
+// Pour changer de page il faut changer l'indice dans le sheet_name_list ex: 0 pour la page 1, 2 pour la page 3 etc
 const firstJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[3]])
 
 
@@ -20,9 +21,7 @@ var component_result = ''
 
 firstJson.forEach(function(value, key) {
 
-  if(value.composant !== 'narrative') {
-
-    if( value.composant !== undefined) {
+  if(value.composant !== 'narrative' && value.composant !== undefined) {
 
       var file = fs.readFileSync('model/' + value.composant + '.json', 'utf-8')
       var compiled = _.template(file)
@@ -72,7 +71,6 @@ firstJson.forEach(function(value, key) {
 
       // On insère les valeurs et on écrit le fichier
       fs.writeFileSync('composant/' + value.composant  + '_' + value._id +  '.json', compiled(value) , {encoding: 'utf8'})
-    }
   }
   else {
     // TODO : Etendre le systeme pour le model media
@@ -101,11 +99,13 @@ firstJson.forEach(function(value, key) {
     itemBody = value.item_body.split(';')
     itemImage = value.item_image.split(';')
 
+    var modelNarrativeItem = fs_extra.readJsonSync('model/narrative-item-model.json', 'utf-8')
+
     for(var i = 0; i < nbrItems; i++ ) {
 
       // On réinitalise le modèle à une valeur par défaut
       // TODO : Clean la valeur par défaut
-      modelItem = {"title":"Narrative stage 1 title","body":"This is display text 1. If viewing on desktop or tablet, this text will appear to the right of the image. On mobile, you’ll need to select the plus icon to reveal this text.","_graphic":{"src":"course/en/images/single_width.jpg","alt":"First graphic"},"strapline":"Here is the first..."};
+      modelItem = modelNarrativeItem;
       modelItem.title = itemTitle[i]
       modelItem.body = itemBody[i]
       modelItem._graphic.src = value._parentId + '/' + itemImage[i]
@@ -158,11 +158,20 @@ firstJson.forEach(function(value, key) {
     value.media4_type  !== undefined ? (value.media4_type=value.media4_type) : (value.media4_type = '')
 
     // TODO : Ajouter un JSON beautifier pour narrative
-    component_result += compiled(value)
+    newValue = JSON.parse(compiled(value))
 
-    fs.writeFileSync('composant/' + value.composant  + '_' + value._id +  '.json', compiled(value) , {encoding: 'utf8'})
+    console.log(typeof(newValue));
+
+    component_result += jsonFormat(newValue)+',\n'
+
+    fs.writeFileSync('composant/' + value.composant  + '_' + value._id +  '.json',jsonFormat(newValue)+',', {encoding: 'utf8'});
+    // fs.writeFileSync('composant/' + value.composant  + '_' + value._id +  '.json',compiled(value), {encoding: 'utf8'});
   }
 
 });
 
-fs.writeFileSync('composant/component_result.json', component_result , {encoding: 'utf8'})
+fs.writeFileSync('composant/component_result.json',component_result , {encoding: 'utf8'})
+
+function makeNarrative (value) {
+
+}
