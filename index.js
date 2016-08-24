@@ -50,7 +50,7 @@ fs.writeFileSync('composant/component_result.json',component_result , {encoding:
 
 
 
-
+// TODO : Faire un nouveau fichier pour la clareté du projet
 
 function makeNarrative (value) {
   // TODO : Etendre le systeme pour le model media
