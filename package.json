@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "fs-extra": "^0.30.0",
+    "json-format": "^0.1.2",
     "lodash": "^4.14.2",
     "xlsx": "^0.8.0"
   }
