@@ -1,6 +1,5 @@
 "use strict";
 
-
 const fs = require('fs')
 const fs_extra = require('fs-extra')
 const _ = require('lodash')
@@ -29,48 +28,11 @@ firstJson.forEach(function(value, key) {
       var file = fs.readFileSync('model/' + value.composant + '.json', 'utf-8')
       var compiled = _.template(file)
 
-      // // Ajout du parentId il est calculer grace à l'id du composant
-      // _parentId = value._id.split('-')
-      // // 'b' est pour block
-      // _parentId[0] = 'b'
-      // _parentId = _parentId.join('-')
-      // value._parentId = _parentId
-
       value._parentId = setParentId(value._id)
+      value.body = cleanText(value.body)
 
-      if(value.body !== undefined) {
-        var re = /"/g;
-        var str = value.body;
-        value.body = str.replace(re, '\\"');
-      }
-      else {
-        value.body = ''
-      }
-
-      // TODO : remplacer les " par \" dans les titres dans vidéo ou dans  n'importe quel texte
-
-      // TODO : Vérifier les saut de ligne et les enlever
-
-
-      // TODO : Trouver une meilleur façon de gérer les erreurs
-      value.pathvideo !== undefined  ? (value.pathvideo=value.pathvideo) : (value.pathvideo = '')
-
-      value.pathvideo !== undefined  ? (value.pathvideo=value.pathvideo) : (value.pathvideo = '')
-      value.media1_title  !== undefined ? (value.media1_title=value.media1_title) : (value.media1_title = '')
-      value.media1_source  !== undefined ? (value.media1_source=value.media1_source) : (value.media1_source = '')
-      value.media1_type  !== undefined ? (value.media1_type=value.media1_type) : (value.media1_type = '')
-
-      value.media2_title  !== undefined ? (value.media2_title=value.media2_title) : (value.media2_title = '')
-      value.media2_source  !== undefined ? (value.media2_source=value.media2_source) : (value.media2_source = '')
-      value.media2_type  !== undefined ? (value.media2_type=value.media2_type) : (value.media2_type = '')
-
-      value.media3_title  !== undefined ? (value.media3_title=value.media3_title) : (value.media3_title = '')
-      value.media3_source  !== undefined ? (value.media3_source=value.media3_source) : (value.media3_source = '')
-      value.media3_type  !== undefined ? (value.media3_type=value.media3_type) : (value.media3_type = '')
-
-      value.media4_title  !== undefined ? (value.media4_title=value.media4_title) : (value.media4_title = '')
-      value.media4_source  !== undefined ? (value.media4_source=value.media4_source) : (value.media4_source = '')
-      value.media4_type  !== undefined ? (value.media4_type=value.media4_type) : (value.media4_type = '')
+      // On n'a pas besoin de récupérer le tableau après la fonction car envoi par référence
+      checkIfKeyExit (value)
 
       component_result += compiled(value)
 
@@ -85,69 +47,36 @@ firstJson.forEach(function(value, key) {
 
 fs.writeFileSync('composant/component_result.json',component_result , {encoding: 'utf8'})
 
-function setParentId (_id) {
 
-  let _parentId = ''
-  // Ajout du parentId il est calculer grace à l'id du composant
-  _parentId = _id.split('-')
-  // 'b' est pour block
-  _parentId[0] = 'b'
-  _parentId = _parentId.join('-')
 
-  return _parentId
-}
+
+
 
 function makeNarrative (value) {
   // TODO : Etendre le systeme pour le model media
-  let file = fs_extra.readJsonSync('model/' + value.composant + '.json', 'utf-8')
 
-  // On reset les variable
+  let nbrItems, itemTitle, itemBody, itemImage, compiled
   let tempItems = []
+
+  // Le fichier est lu comme un objet JSON pour manipuler les données
+  let file = fs_extra.readJsonSync('model/' + value.composant + '.json', 'utf-8')
   file._items = []
 
-  let nbrItems
-  let itemTitle
-  let itemBody
-  let itemImage
+  value._parentId = setParentId(value._id)
+  value.body = cleanText(value.body)
 
-  let compiled
-
-
-
-  let _parentId
-  // Ajout du parentId il est calculer grace à l'id du composant
-  _parentId = value._id.split('-')
-  // 'b' est pour block
-  _parentId[0] = 'b'
-  _parentId = _parentId.join('-')
-  value._parentId = _parentId
-
-
-  // Le modèle des information du narrative
-  // {
-  //    "title": "Narrative stage 1 title",
-  //    "body": "This is display text 1. If viewing on desktop or tablet, this text will appear to the right of the image. On mobile, you’ll need to select the plus icon to reveal this text.",
-  //    "_graphic": {
-  //        "src": "course/en/images/single_width.jpg",
-  //        "alt": "First graphic"
-  //    },
-  //    "strapline": "Here is the first..."
-  // }
-
-
-  // On récupère les options pour créer les slide du narrative
+  // On récupère les options pour créer les slides du narrative
   nbrItems = value.items
   itemTitle = value.item_title.split(';')
   itemBody = value.item_body.split(';')
   itemImage = value.item_image.split(';')
 
-  var modelNarrativeItem = fs_extra.readJsonSync('model/narrative-item-model.json', 'utf-8')
+  let modelNarrativeItem = fs_extra.readJsonSync('model/narrative-item-model.json', 'utf-8')
   let modelItem
 
   for(var i = 0; i < nbrItems; i++ ) {
 
-    // On réinitalise le modèle à une valeur par défaut
-    // TODO : Clean la valeur par défaut
+    // On reprend le model pour insérer de nouvelles données
     modelItem = modelNarrativeItem;
     modelItem.title = itemTitle[i]
     modelItem.body = itemBody[i]
@@ -162,51 +91,53 @@ function makeNarrative (value) {
   // Les slides sont maintenant ajouter dans l'objet final
   file._items = tempItems
 
-  // On passe d'un JSON à un string pour pouvoir insérer les données dans le template grace à lodash
+  // On passe d'un JSON à un string pour pouvoir insérer les données dans le template lodash
   file = JSON.stringify(file)
   compiled = _.template(file)
 
-  if(value.body !== undefined) {
-    var re = /"/g;
-    var str = value.body;
-    value.body = str.replace(re, '\\"');
-  }
-  else {
-    value.body = ''
-  }
 
-  // TODO : remplacer les " par \" dans les titres dans vidéo ou dans  n'importe quel texte
-
-  // TODO : Vérifier les saut de ligne et les enlever
-
-
-  // TODO : Trouver une meilleur façon de gérer les erreurs
-  value.pathvideo !== undefined  ? (value.pathvideo=value.pathvideo) : (value.pathvideo = '')
-
-  value.pathvideo !== undefined  ? (value.pathvideo=value.pathvideo) : (value.pathvideo = '')
-  value.media1_title  !== undefined ? (value.media1_title=value.media1_title) : (value.media1_title = '')
-  value.media1_source  !== undefined ? (value.media1_source=value.media1_source) : (value.media1_source = '')
-  value.media1_type  !== undefined ? (value.media1_type=value.media1_type) : (value.media1_type = '')
-
-  value.media2_title  !== undefined ? (value.media2_title=value.media2_title) : (value.media2_title = '')
-  value.media2_source  !== undefined ? (value.media2_source=value.media2_source) : (value.media2_source = '')
-  value.media2_type  !== undefined ? (value.media2_type=value.media2_type) : (value.media2_type = '')
-
-  value.media3_title  !== undefined ? (value.media3_title=value.media3_title) : (value.media3_title = '')
-  value.media3_source  !== undefined ? (value.media3_source=value.media3_source) : (value.media3_source = '')
-  value.media3_type  !== undefined ? (value.media3_type=value.media3_type) : (value.media3_type = '')
-
-  value.media4_title  !== undefined ? (value.media4_title=value.media4_title) : (value.media4_title = '')
-  value.media4_source  !== undefined ? (value.media4_source=value.media4_source) : (value.media4_source = '')
-  value.media4_type  !== undefined ? (value.media4_type=value.media4_type) : (value.media4_type = '')
-
-  // TODO : Ajouter un JSON beautifier pour narrative
   let newValue
   newValue = JSON.parse(compiled(value))
-
-  console.log(typeof(newValue));
 
   component_result += jsonFormat(newValue)+',\n'
 
   fs.writeFileSync('composant/' + value.composant  + '_' + value._id +  '.json',jsonFormat(newValue)+',', {encoding: 'utf8'});
+}
+
+function checkIfKeyExit (value) {
+  let objectKeys = ['pathvideo','pathvideo','media1_title','media1_source','media1_type','media2_title','media2_source','media2_type','media3_title','media3_source','media3_type','media4_title','media4_source','media4_type']
+  for(let i = 0; i < objectKeys.length; i++) {
+    if(value[objectKeys[i]] === undefined ) {
+      value[objectKeys[i]] !== undefined  ? (value[objectKeys[i]]=value[objectKeys[i]]) : (value[objectKeys[i]] = '')
+      console.log('Erreur');
+    }
+    else{
+      console.log('ok');
+    }
+  }
+}
+
+function setParentId (_id) {
+
+  let _parentId = ''
+  _parentId = _id.split('-')
+  _parentId[0] = 'b'
+  _parentId = _parentId.join('-')
+
+  return _parentId
+}
+
+function cleanText (text) {
+
+  if(text !== undefined) {
+    let clearQuote = /"/g;
+    text = text.replace(clearQuote, '\\"');
+    let clearRetourLigneLOL = /\n/g;
+    text = text.replace(clearRetourLigneLOL, '');
+  }
+  else {
+    text = ''
+  }
+
+  return text
 }
