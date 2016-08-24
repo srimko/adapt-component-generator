@@ -15,7 +15,6 @@ const sheet_name_list = workbook.SheetNames
 // Pour changer de page il faut changer l'indice dans le sheet_name_list ex: 0 pour la page 1, 2 pour la page 3
 const firstJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[3]])
 
-console.log(firstJson);
 
 var component_result = ''
 
@@ -24,13 +23,13 @@ firstJson.forEach(function(value, key) {
   if(value.composant !== 'narrative') {
 
     if( value.composant !== undefined) {
-      console.log(value.body);
 
       var file = fs.readFileSync('model/' + value.composant + '.json', 'utf-8')
       var compiled = _.template(file)
 
       // Ajout du parentId il est calculer grace à l'id du composant
       _parentId = value._id.split('-')
+      // 'b' est pour block
       _parentId[0] = 'b'
       _parentId = _parentId.join('-')
       value._parentId = _parentId
