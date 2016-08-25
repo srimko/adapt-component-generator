@@ -6,6 +6,8 @@ const _ = require('lodash')
 const XLSX = require('xlsx')
 const jsonFormat = require('json-format')
 
+const shell = require('shelljs')
+
 const fileName = process.argv[2] || 'src/Liste_composant.xlsx'
 
 const workbook = XLSX.readFile(fileName)
@@ -13,7 +15,6 @@ const workbook = XLSX.readFile(fileName)
 const sheet_name_list = workbook.SheetNames
 
 // TODO : Faire la fonction qui génère le block.json en même temps que component
-// TODO : Faire une fonction qui permet de générer les composants et le component_result dans un dossier pour chaque page.
 
 // Pour changer de page il faut changer l'indice dans le sheet_name_list ex: 0 pour la page 1, 2 pour la page 3 etc
 const firstJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[3]])
@@ -21,38 +22,54 @@ const firstJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[3]])
 
 var component_result = ''
 
-firstJson.forEach(function(value, key) {
+// TODO : Faire une fonction d'initialisation
+// Initialisation du projet
+let directories = sheet_name_list
+shell.mkdir('-p','result')
+_.forEach(sheet_name_list, function(value, key) {
+  shell.mkdir('-p','result/' + value)
+})
 
-  if(value.composant !== 'narrative' && value.composant !== undefined) {
+for(let i = 0; i < sheet_name_list.length; i++) {
 
-      var file = fs.readFileSync('model/' + value.composant + '.json', 'utf-8')
-      var compiled = _.template(file)
+  // On récupère la feuille XLSX en entier au format JSON
+  let JSONsheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[i]]);
 
-      value._parentId = setParentId(value._id)
-      value.body = cleanText(value.body)
+  // On itère sur chaque élément du JSON
+  JSONsheet.forEach(function(value, key) {
+    
+    switch (value.composant) {
+      case 'narrative':
+        makeNarrative(value, sheet_name_list[i])
+        break;
+      default:
+        makeComponent(value, sheet_name_list[i])
+    }
+  })
+}
 
-      // On n'a pas besoin de récupérer le tableau après la fonction car envoi par référence
-      checkIfKeyExit (value)
-
-      component_result += compiled(value)
-
-      // On insère les valeurs et on écrit le fichier
-      fs.writeFileSync('composant/' + value.composant  + '_' + value._id +  '.json', compiled(value) , {encoding: 'utf8'})
-  }
-  else {
-    makeNarrative(value)
-  }
-
-});
-
-fs.writeFileSync('composant/component_result.json',component_result , {encoding: 'utf8'})
+fs.writeFileSync('result/component_result.json',component_result , {encoding: 'utf8'})
 
 
+function makeComponent (value,directory) {
+  var file = fs.readFileSync('model/' + value.composant + '.json', 'utf-8')
+  var compiled = _.template(file)
 
+  value._parentId = setParentId(value._id)
+  value.body = cleanText(value.body)
+
+  // On n'a pas besoin de récupérer le tableau après la fonction car envoi par référence
+  checkIfKeyExit (value)
+
+  component_result += compiled(value)
+
+  // On insère les valeur s et on écrit le fichier
+  fs.writeFileSync('result/' + directory + '/' +value.composant  + '_' + value._id +  '.json', compiled(value) , {encoding: 'utf8'})
+}
 
 // TODO : Faire un nouveau fichier pour la clareté du projet
 
-function makeNarrative (value) {
+function makeNarrative (value, directory) {
   // TODO : Etendre le systeme pour le model media
 
   let nbrItems, itemTitle, itemBody, itemImage, compiled
@@ -101,18 +118,31 @@ function makeNarrative (value) {
 
   component_result += jsonFormat(newValue)+',\n'
 
-  fs.writeFileSync('composant/' + value.composant  + '_' + value._id +  '.json',jsonFormat(newValue)+',', {encoding: 'utf8'});
+  fs.writeFileSync('result/' + directory + '/' +value.composant  + '_' + value._id +  '.json',jsonFormat(newValue)+',', {encoding: 'utf8'});
 }
 
 function checkIfKeyExit (value) {
-  let objectKeys = ['pathvideo','pathvideo','media1_title','media1_source','media1_type','media2_title','media2_source','media2_type','media3_title','media3_source','media3_type','media4_title','media4_source','media4_type']
+  let objectKeys = [
+    'pathvideo',
+    'pathvideo',
+    'media1_title',
+    'image_root',
+    'media1_source',
+    'media1_type',
+    'media2_title',
+    'media2_source',
+    'media2_type',
+    'media3_title',
+    'media3_source',
+    'media3_type',
+    'media4_title',
+    'media4_source',
+    'media4_type']
   for(let i = 0; i < objectKeys.length; i++) {
     if(value[objectKeys[i]] === undefined ) {
       value[objectKeys[i]] !== undefined  ? (value[objectKeys[i]]=value[objectKeys[i]]) : (value[objectKeys[i]] = '')
-      console.log('Erreur');
     }
-    else{
-      console.log('ok');
+    else {
     }
   }
 }
@@ -131,7 +161,7 @@ function cleanText (text) {
 
   if(text !== undefined) {
     let clearQuote = /"/g;
-    text = text.replace(clearQuote, '\\"');
+    text = text.replace(clearQuote,'\\"');
     let clearRetourLigneLOL = /\n/g;
     text = text.replace(clearRetourLigneLOL, '');
   }
