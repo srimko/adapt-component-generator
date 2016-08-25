@@ -5,13 +5,12 @@ const fs_extra = require('fs-extra')
 const _ = require('lodash')
 const XLSX = require('xlsx')
 const jsonFormat = require('json-format')
-
 const shell = require('shelljs')
 
+
+// TODO : Gérer les arguments
 const fileName = process.argv[2] || 'src/Liste_composant.xlsx'
-
 const workbook = XLSX.readFile(fileName)
-
 const sheet_name_list = workbook.SheetNames
 
 // TODO : Faire la fonction qui génère le block.json en même temps que component
@@ -19,8 +18,9 @@ const sheet_name_list = workbook.SheetNames
 // Pour changer de page il faut changer l'indice dans le sheet_name_list ex: 0 pour la page 1, 2 pour la page 3 etc
 const firstJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[3]])
 
-
 var component_result = ''
+
+let blockList = []
 
 // TODO : Faire une fonction d'initialisation
 // Initialisation du projet
@@ -32,12 +32,12 @@ _.forEach(sheet_name_list, function(value, key) {
 
 for(let i = 0; i < sheet_name_list.length; i++) {
 
-  // On récupère la feuille XLSX en entier au format JSON
+  // On récupère les feuilles XLSX en entier au format JSON
   let JSONsheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[i]]);
 
-  // On itère sur chaque élément du JSON
+  // On itère sur chaque élément du fichier JSON
   JSONsheet.forEach(function(value, key) {
-    
+
     switch (value.composant) {
       case 'narrative':
         makeNarrative(value, sheet_name_list[i])
@@ -45,11 +45,44 @@ for(let i = 0; i < sheet_name_list.length; i++) {
       default:
         makeComponent(value, sheet_name_list[i])
     }
+
+    blockList.push(value._parentId)
+
+
   })
 }
 
 fs.writeFileSync('result/component_result.json',component_result , {encoding: 'utf8'})
+makeBlock(blockList)
 
+
+
+
+
+
+// TODO : Faire un nouveau fichier pour la clareté du projet
+
+function makeBlock (blockList) {
+
+  let blockFile = fs_extra.readJsonSync('model/block.json', 'utf-8')
+  let tempBlock = [] 
+
+  _.forEach(blockList, function(value, key) {
+
+    let _tempBlock = {}
+    _tempBlock._id = blockList[key];
+    _tempBlock._parentId = setParentId(_tempBlock._id, 'a');
+    _tempBlock.title = blockList[key];
+    _tempBlock.type = 'block';
+    _tempBlock.displayTitle = blockList[key];
+    _tempBlock._trackingId = key
+
+    tempBlock.push(_tempBlock)
+
+  })
+
+  fs.writeFileSync('result/block.json',jsonFormat(tempBlock), {encoding: 'utf8'});
+}
 
 function makeComponent (value,directory) {
   var file = fs.readFileSync('model/' + value.composant + '.json', 'utf-8')
@@ -67,9 +100,8 @@ function makeComponent (value,directory) {
   fs.writeFileSync('result/' + directory + '/' +value.composant  + '_' + value._id +  '.json', compiled(value) , {encoding: 'utf8'})
 }
 
-// TODO : Faire un nouveau fichier pour la clareté du projet
-
 function makeNarrative (value, directory) {
+
   // TODO : Etendre le systeme pour le model media
 
   let nbrItems, itemTitle, itemBody, itemImage, compiled
@@ -113,6 +145,7 @@ function makeNarrative (value, directory) {
   compiled = _.template(file)
 
 
+  // On le transforme on jolie JSON formater
   let newValue
   newValue = JSON.parse(compiled(value))
 
@@ -122,6 +155,7 @@ function makeNarrative (value, directory) {
 }
 
 function checkIfKeyExit (value) {
+
   let objectKeys = [
     'pathvideo',
     'pathvideo',
@@ -147,11 +181,20 @@ function checkIfKeyExit (value) {
   }
 }
 
-function setParentId (_id) {
+function setParentId (_id, type) {
 
   let _parentId = ''
+
   _parentId = _id.split('-')
-  _parentId[0] = 'b'
+
+  if(type === undefined) {
+    _parentId[0] = 'b'
+  }
+  else {
+    _parentId[0] = type
+    _parentId.pop()
+  }
+
   _parentId = _parentId.join('-')
 
   return _parentId
