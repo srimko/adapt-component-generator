@@ -65,7 +65,7 @@ makeBlock(blockList)
 function makeBlock (blockList) {
 
   let blockFile = fs_extra.readJsonSync('model/block.json', 'utf-8')
-  let tempBlock = [] 
+  let tempBlock = []
 
   _.forEach(blockList, function(value, key) {
 
@@ -74,7 +74,8 @@ function makeBlock (blockList) {
     _tempBlock._parentId = setParentId(_tempBlock._id, 'a');
     _tempBlock.title = blockList[key];
     _tempBlock.type = 'block';
-    _tempBlock.displayTitle = blockList[key];
+    // _tempBlock.displayTitle = blockList[key];
+    _tempBlock.displayTitle = ''
     _tempBlock._trackingId = key
 
     tempBlock.push(_tempBlock)
@@ -90,6 +91,15 @@ function makeComponent (value,directory) {
 
   value._parentId = setParentId(value._id)
   value.body = cleanText(value.body)
+
+  // console.log( value.composant);
+  if(value.composant === 'multicam') {
+    // console.log(value._medias[0]);
+    value.media1_title = cleanText(value.media1_title)
+    value.media2_title = cleanText(value.media2_title)
+    value.media3_title = cleanText(value.media3_title)
+    value.media4_title = cleanText(value.media4_title)
+  }
 
   // On n'a pas besoin de récupérer le tableau après la fonction car envoi par référence
   checkIfKeyExit (value)
@@ -129,7 +139,7 @@ function makeNarrative (value, directory) {
     modelItem = modelNarrativeItem;
     modelItem.title = itemTitle[i]
     modelItem.body = itemBody[i]
-    modelItem._graphic.src = value._parentId + '/' + itemImage[i]
+    modelItem._graphic.src = value.pathimage + '/' + itemImage[i]
     modelItem.strapline = itemTitle[i]
 
     // On insère dans l'objet temporaire
