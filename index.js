@@ -6,7 +6,7 @@ const _ = require('lodash')
 const XLSX = require('xlsx')
 const jsonFormat = require('json-format')
 const shell = require('shelljs')
-
+const debug = require('debug')('index')
 
 // TODO : Gérer les arguments
 const fileName = process.argv[2] || 'src/Liste_composant.xlsx'
@@ -111,12 +111,13 @@ function makeComponent (value,directory) {
 }
 
 function makeNarrative (value, directory) {
-
+  console.log('call narative')
   // TODO : Etendre le systeme pour le model media
 
   let nbrItems, itemTitle, itemBody, itemImage, compiled
-  let tempItems = []
 
+  const tempItems = []
+  debug(tempItems)
   // Le fichier est lu comme un objet JSON pour manipuler les données
   let file = fs_extra.readJsonSync('model/' + value.composant + '.json', 'utf-8')
   file._items = []
@@ -130,22 +131,40 @@ function makeNarrative (value, directory) {
   itemBody = value.item_body.split(';')
   itemImage = value.item_image.split(';')
 
-  let modelNarrativeItem = fs_extra.readJsonSync('model/narrative-item-model.json', 'utf-8')
-  let modelItem
+  let modelNarrativeItem = fs_extra.readFileSync('model/narrative-item-model.json', 'utf-8')
+  let i = 0
+  _.each(itemTitle, function(){
+      let modelItem
+      // On reprend le model pour insérer de nouvelles données
+      modelItem = JSON.parse(modelNarrativeItem);
+      //modelItem = { "title":"Narrative stage 1 title", "body":"This is display text 1. If viewing on desktop or tablet, this text will appear to the right of the image. On mobile, you’ll need to select the plus icon to reveal this text.", "_graphic":{ "src":"course/en/images/single_width.jpg", "alt":"First graphic" }, "strapline":"Here is the first..." };
+      modelItem.title = itemTitle[i]
+      modelItem.body = itemBody[i]
+      modelItem._graphic.src = value.pathimage + '/' + itemImage[i]
+      modelItem.strapline = itemTitle[i]
 
-  for(var i = 0; i < nbrItems; i++ ) {
 
-    // On reprend le model pour insérer de nouvelles données
-    modelItem = modelNarrativeItem;
-    modelItem.title = itemTitle[i]
-    modelItem.body = itemBody[i]
-    modelItem._graphic.src = value.pathimage + '/' + itemImage[i]
-    modelItem.strapline = itemTitle[i]
-
-    // On insère dans l'objet temporaire
-    tempItems.push(modelItem)
-
-  }
+      // On insère dans l'objet temporaire
+      tempItems.push(modelItem)
+      // debug(itemBody[i], i)
+      i++
+  })
+  // for(var i = 0; i < nbrItems; i++ ) {
+  //   let modelItem
+  //   // On reprend le model pour insérer de nouvelles données
+  //   modelItem = modelNarrativeItem;
+  //   modelItem.title = itemTitle[i]
+  //   modelItem.body = itemBody[i]
+  //   modelItem._graphic.src = value.pathimage + '/' + itemImage[i]
+  //   modelItem.strapline = itemTitle[i]
+  //
+  //   //console.log(modelItem, i)
+  //
+  //   // On insère dans l'objet temporaire
+  //   tempItems.push(modelItem)
+  //
+  // }
+  debug(tempItems);
 
   // Les slides sont maintenant ajouter dans l'objet final
   file._items = tempItems
