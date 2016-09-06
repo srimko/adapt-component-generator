@@ -44,6 +44,7 @@ if(checkFileExistsSync(fileName)) {
           makeNarrative(value, sheet_name_list[i])
           break;
         case undefined:
+            // TODO: Gérer les lignes vides et les composant qui ne sont pas encore été créer
             console.log('Error : Composant ' + value.composant + ' doesn\'t exist...')
             // process.exit()
           break;
