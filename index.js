@@ -10,53 +10,58 @@ const debug = require('debug')('index')
 
 // TODO : Gérer les arguments
 const fileName = process.argv[2] || 'src/Liste_composant.xlsx'
-const workbook = XLSX.readFile(fileName)
-const sheet_name_list = workbook.SheetNames
-
-// TODO : Faire la fonction qui génère le block.json en même temps que component
-
-// Pour changer de page il faut changer l'indice dans le sheet_name_list ex: 0 pour la page 1, 2 pour la page 3 etc
-const firstJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[3]])
-
-var component_result = ''
-
-let blockList = []
-
-// TODO : Faire une fonction d'initialisation
-// Initialisation du projet
-let directories = sheet_name_list
-shell.mkdir('-p','result')
-_.forEach(sheet_name_list, function(value, key) {
-  shell.mkdir('-p','result/' + value)
-})
-
-for(let i = 0; i < sheet_name_list.length; i++) {
-
-  // On récupère les feuilles XLSX en entier au format JSON
-  let JSONsheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[i]]);
-
-  // On itère sur chaque élément du fichier JSON
-  JSONsheet.forEach(function(value, key) {
-
-    switch (value.composant) {
-      case 'narrative':
-        makeNarrative(value, sheet_name_list[i])
-        break;
-      default:
-        makeComponent(value, sheet_name_list[i])
-    }
-
-    blockList.push(value._parentId)
 
 
+if(checkFileExistsSync(fileName)) {
+  const workbook = XLSX.readFile(fileName)
+  const sheet_name_list = workbook.SheetNames
+
+  // Pour changer de page il faut changer l'indice dans le sheet_name_list ex: 0 pour la page 1, 2 pour la page 3 etc
+  // const firstJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[3]])
+
+  var component_result = ''
+
+  let blockList = []
+
+  // TODO : Faire une fonction d'initialisation
+  // Initialisation du projet
+  let directories = sheet_name_list
+  shell.mkdir('-p','result')
+  _.forEach(sheet_name_list, function(value, key) {
+    shell.mkdir('-p','result/' + value)
   })
+
+  for(let i = 0; i < sheet_name_list.length; i++) {
+
+    // On récupère les feuilles XLSX en entier au format JSON
+    let JSONsheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[i]]);
+
+    // On itère sur chaque élément du fichier JSON
+    JSONsheet.forEach(function(value, key) {
+
+      switch (value.composant) {
+        case 'narrative':
+          makeNarrative(value, sheet_name_list[i])
+          break;
+        default:
+          makeComponent(value, sheet_name_list[i])
+      }
+
+      blockList.push(value._parentId)
+    })
+  }
+
+  // Ecriture du fichier component_result
+  fs.writeFileSync('result/component_result.json',component_result , {encoding: 'utf8'})
+
+  // Ecriture du fichier block.json
+  makeBlock(blockList)
 }
-
-fs.writeFileSync('result/component_result.json',component_result , {encoding: 'utf8'})
-makeBlock(blockList)
-
-
-
+else {
+  // Exit script
+  console.log('File \'' +fileName + ' \'doesn\'t exist...');
+  process.exit();
+}
 
 
 
@@ -89,6 +94,8 @@ function makeComponent (value,directory) {
   var file = fs.readFileSync('model/' + value.composant + '.json', 'utf-8')
   var compiled = _.template(file)
 
+  console.log(value.composant);
+
   value._parentId = setParentId(value._id)
   value.body = cleanText(value.body)
 
@@ -111,7 +118,7 @@ function makeComponent (value,directory) {
 }
 
 function makeNarrative (value, directory) {
-  console.log('call narative')
+  console.log(value.composant);
   // TODO : Etendre le systeme pour le model media
 
   let nbrItems, itemTitle, itemBody, itemImage, compiled
@@ -125,6 +132,7 @@ function makeNarrative (value, directory) {
   value._parentId = setParentId(value._id)
   value.body = cleanText(value.body)
 
+  // TODO: Vérifier les trois valeurs pour initialiser nbrItems
   // On récupère les options pour créer les slides du narrative
   nbrItems = value.items
   itemTitle = value.item_title.split(';')
@@ -137,33 +145,17 @@ function makeNarrative (value, directory) {
       let modelItem
       // On reprend le model pour insérer de nouvelles données
       modelItem = JSON.parse(modelNarrativeItem);
-      //modelItem = { "title":"Narrative stage 1 title", "body":"This is display text 1. If viewing on desktop or tablet, this text will appear to the right of the image. On mobile, you’ll need to select the plus icon to reveal this text.", "_graphic":{ "src":"course/en/images/single_width.jpg", "alt":"First graphic" }, "strapline":"Here is the first..." };
       modelItem.title = itemTitle[i]
       modelItem.body = itemBody[i]
       modelItem._graphic.src = value.pathimage + '/' + itemImage[i]
       modelItem.strapline = itemTitle[i]
-
 
       // On insère dans l'objet temporaire
       tempItems.push(modelItem)
       // debug(itemBody[i], i)
       i++
   })
-  // for(var i = 0; i < nbrItems; i++ ) {
-  //   let modelItem
-  //   // On reprend le model pour insérer de nouvelles données
-  //   modelItem = modelNarrativeItem;
-  //   modelItem.title = itemTitle[i]
-  //   modelItem.body = itemBody[i]
-  //   modelItem._graphic.src = value.pathimage + '/' + itemImage[i]
-  //   modelItem.strapline = itemTitle[i]
-  //
-  //   //console.log(modelItem, i)
-  //
-  //   // On insère dans l'objet temporaire
-  //   tempItems.push(modelItem)
-  //
-  // }
+
   debug(tempItems);
 
   // Les slides sont maintenant ajouter dans l'objet final
@@ -183,11 +175,23 @@ function makeNarrative (value, directory) {
   fs.writeFileSync('result/' + directory + '/' +value.composant  + '_' + value._id +  '.json',jsonFormat(newValue)+',', {encoding: 'utf8'});
 }
 
+function checkFileExistsSync (filepath) {
+  let flag = true
+  try {
+    fs.accessSync(filepath, fs.F_OK)
+  } catch (e) {
+    flag = false
+  }
+  return flag
+}
+
 function checkIfKeyExit (value) {
 
   let objectKeys = [
     'pathvideo',
-    'pathvideo',
+    'pathimage',
+    'poster',
+    'mp4',
     'media1_title',
     'image_root',
     'media1_source',
