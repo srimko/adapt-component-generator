@@ -15,24 +15,9 @@
   "poster": "<%= pathimage %>/<%= poster %>",
   "_medias": [
       {
-        "title": "<%= media1_title %>",
-        "source": "<%= pathvideo %>/<%= media1_source %>",
-        "type": "<%= media1_type %>"
-      },
-      {
-        "title": "<%= media2_title %>",
-        "source": "<%= pathvideo %>/<%= media2_source %>",
-        "type": "<%= media2_type %>"
-      },
-      {
-        "title": "<%= media3_title %>",
-        "source": "<%= pathvideo %>/<%= media3_source %>",
-        "type": "<%= media3_type %>"
-      },
-      {
-        "title": "<%= media4_title %>",
-        "source": "<%= pathvideo %>/<%= media4_source %>",
-        "type": "<%= media4_type %>"
+        "title": "",
+        "source": "",
+        "type": ""
       }
     ],
     "_playerOptions": {
