@@ -43,6 +43,10 @@ if(checkFileExistsSync(fileName)) {
         case 'narrative':
           makeNarrative(value, sheet_name_list[i])
           break;
+        case undefined:
+            console.log('Error : Composant ' + value.composant + ' doesn\'t exist...')
+            // process.exit()
+          break;
         default:
           makeComponent(value, sheet_name_list[i])
       }
