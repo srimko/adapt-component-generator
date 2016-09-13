@@ -115,11 +115,11 @@ function makeMCQ (value,directory) {
 
   value._parentId = setParentId(value._id)
 
+  value.body = value.question
   value.body = cleanText(value.body)
 
   // TODO: Vérifier les trois valeurs pour initialiser nbrItems
   // On récupère les options pour créer les slides du narrative
-  question = value.question
   answers = value.answer.split(';')
 
   // process.exit()
@@ -142,8 +142,6 @@ function makeMCQ (value,directory) {
         modelItem._shouldBeSelected = false
       }
 
-      console.log(modelItem);
-      console.log('______');
       // On insère dans l'objet temporaire
       tempItems.push(modelItem)
       // debug(itemBody[i], i)
@@ -272,6 +270,7 @@ function checkIfKeyExit (value) {
     'pathimage',
     'poster',
     'mp4',
+    'itemBody',
     'displayTitle',
     'media1_title',
     'image_root',
