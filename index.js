@@ -43,6 +43,9 @@ if(checkFileExistsSync(fileName)) {
         case 'narrative':
           makeNarrative(value, sheet_name_list[i])
           break;
+        case 'mcq':
+          makeMCQ(value, sheet_name_list[i])
+          break;
         case undefined:
             // TODO: Gérer les lignes vides et les composant qui ne sont pas encore été créer
             console.log('Error : Composant ' + value.composant + ' doesn\'t exist...')
@@ -57,7 +60,6 @@ if(checkFileExistsSync(fileName)) {
   }
 
   // TODO : Remove last comma in component_result string
-
 
   // Ecriture du fichier component_result
   fs.writeFileSync('result/component_result.json',component_result , {encoding: 'utf8'})
@@ -74,6 +76,9 @@ else {
 
 
 // TODO : Faire un nouveau fichier pour la clareté du projet
+
+
+
 
 function makeBlock (blockList) {
 
@@ -96,6 +101,73 @@ function makeBlock (blockList) {
   })
 
   fs.writeFileSync('result/block.json',jsonFormat(tempBlock), {encoding: 'utf8'});
+}
+
+
+function makeMCQ (value,directory) {
+  let question, answers, compiled
+
+  const tempItems = []
+  debug(tempItems)
+  // Le fichier est lu comme un objet JSON pour manipuler les données
+  let file = fs_extra.readJsonSync('model/' + value.composant + '.json', 'utf-8')
+  file._items = []
+
+  value._parentId = setParentId(value._id)
+
+  value.body = cleanText(value.body)
+
+  // TODO: Vérifier les trois valeurs pour initialiser nbrItems
+  // On récupère les options pour créer les slides du narrative
+  question = value.question
+  answers = value.answer.split(';')
+
+  // process.exit()
+
+  let modelMCQItem = fs_extra.readFileSync('model/mcq-item-model.json', 'utf-8')
+  let i = 0
+  _.each(answers, function(){
+      let modelItem
+      // On reprend le model pour insérer de nouvelles données
+      modelItem = JSON.parse(modelMCQItem);
+
+      // console.log(answers[i]);
+
+      modelItem.text = answers[i]
+      if( /(\(v\))/gi.test(answers[i]) ) {
+        modelItem.text = modelItem.text.replace(/\(v\)/gi,'')
+        modelItem._shouldBeSelected = true
+      }
+      else{
+        modelItem._shouldBeSelected = false
+      }
+
+      console.log(modelItem);
+      console.log('______');
+      // On insère dans l'objet temporaire
+      tempItems.push(modelItem)
+      // debug(itemBody[i], i)
+      i++
+  })
+
+
+  debug(tempItems);
+
+  // Les slides sont maintenant ajouter dans l'objet final
+  file._items = tempItems
+
+  // On passe d'un JSON à un string pour pouvoir insérer les données dans le template lodash
+  file = JSON.stringify(file)
+  compiled = _.template(file)
+
+
+  // On le transforme on jolie JSON formater
+  let newValue
+  newValue = JSON.parse(compiled(value))
+
+  component_result += jsonFormat(newValue)+',\n'
+
+  fs.writeFileSync('result/' + directory + '/' +value.composant  + '_' + value._id +  '.json',jsonFormat(newValue)+',', {encoding: 'utf8'});
 }
 
 function makeComponent (value,directory) {

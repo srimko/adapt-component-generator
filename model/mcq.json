@@ -36,41 +36,41 @@
     }
   ],
   "_feedback":{
-    "correct":"Congratulations, this is the correct feedback.",
+    "correct":"Féliciations, c’est la bonne réponse !",
     "_incorrect": {
       "notFinal": "",
-      "final": "This feedback will appear if you answered the question incorrectly."
+      "final": "Mauvaises réponse"
     },
     "_partlyCorrect": {
       "notFinal": "",
-      "final": "This feedback will appear if you answered the question correctly."
+      "final": "C’est la bonne réponse !"
     }
   },
   "_buttons": {
     "_submit": {
-      "buttonText": "Submit",
+      "buttonText": "Soumettre",
       "ariaLabel": "Select here to submit your answer."
     },
     "_reset": {
-      "buttonText": "Reset",
+      "buttonText": "Relancer",
       "ariaLabel": ""
     },
     "_showCorrectAnswer": {
-      "buttonText": "Correct Answer",
+      "buttonText": "Réponse correcte",
       "ariaLabel": ""
     },
     "_hideCorrectAnswer": {
-      "buttonText": "My Answer",
+      "buttonText": "Ma réponse",
       "ariaLabel": ""
     },
     "_showFeedback": {
-      "buttonText": "Show feedback",
+      "buttonText": "Montrer les commentaires",
       "ariaLabel": ""
     },
-    "remainingAttemptsText": "attempts remaining",
-    "remainingAttemptText": "final attempt"
+    "remainingAttemptsText": "Nombre de tentatives restantes",
+    "remainingAttemptText": "Dernière tentative"
   },
   "_pageLevelProgress": {
     "_isEnabled": true
   }
-},
+}
