@@ -56,6 +56,9 @@ if(checkFileExistsSync(fileName)) {
     })
   }
 
+  // TODO : Remove last comma in component_result string
+
+
   // Ecriture du fichier component_result
   fs.writeFileSync('result/component_result.json',component_result , {encoding: 'utf8'})
 
@@ -99,7 +102,7 @@ function makeComponent (value,directory) {
   var file = fs.readFileSync('model/' + value.composant + '.json', 'utf-8')
   var compiled = _.template(file)
 
-  console.log(value.composant);
+  // console.log(value.composant);
 
   value._parentId = setParentId(value._id)
   value.body = cleanText(value.body)
@@ -123,7 +126,7 @@ function makeComponent (value,directory) {
 }
 
 function makeNarrative (value, directory) {
-  console.log(value.composant);
+  // console.log(value.composant);
   // TODO : Etendre le systeme pour le model media
 
   let nbrItems, itemTitle, itemBody, itemImage, compiled
@@ -197,6 +200,7 @@ function checkIfKeyExit (value) {
     'pathimage',
     'poster',
     'mp4',
+    'displayTitle',
     'media1_title',
     'image_root',
     'media1_source',
