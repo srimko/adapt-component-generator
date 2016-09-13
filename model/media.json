@@ -9,7 +9,7 @@
   "displayTitle": "<%= displayTitle %>",
   "body": "<%= body %>",
   "instruction": "",
-  "_setCompletionOn":"inview",
+  "_setCompletionOn":"ended",
   "_useClosedCaptions":true,
   "_startLanguage":"en",
   "_media": {
