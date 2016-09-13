@@ -1,10 +1,10 @@
 {
-  "_id":"c-105",
-  "_parentId":"b-55",
+  "_id":"<%= _id %>",
+  "_parentId":"<%= _parentId %>",
   "_type":"component",
   "_component":"mcq",
   "_classes":"",
-  "_layout":"left",
+  "_layout":"full",
   "_attempts":1,
   "_shouldDisplayAttempts": false,
   "_questionWeight":1,
@@ -12,9 +12,9 @@
   "_selectable":1,
   "_canShowModelAnswer": true,
   "_recordInteraction":true,
-  "title": "MCQ",
-  "displayTitle": "MCQ",
-  "body": "Which of the following options would you consider to be correct?",
+  "title": "<%= title %>",
+  "displayTitle": "<%= displayTitle %>",
+  "body": "<%= body %>",
   "instruction": "",
   "_items": [
     {
