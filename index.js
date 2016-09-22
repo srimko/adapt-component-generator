@@ -43,6 +43,9 @@ if(checkFileExistsSync(fileName)) {
         case 'narrative':
           makeNarrative(value, sheet_name_list[i])
           break;
+        case 'multicam':
+          makeMultiCam(value, sheet_name_list[i])
+          break;
         case 'mcq':
           makeMCQ(value, sheet_name_list[i])
           break;
@@ -116,7 +119,7 @@ function makeMCQ (value,directory) {
   value._parentId = setParentId(value._id)
 
   value.body = value.question
-  value.body = cleanText(value.body)
+  file.body = cleanText(value.body)
 
   // TODO: Vérifier les trois valeurs pour initialiser nbrItems
   // On récupère les options pour créer les slides du narrative
@@ -126,6 +129,7 @@ function makeMCQ (value,directory) {
 
   let modelMCQItem = fs_extra.readFileSync('model/mcq-item-model.json', 'utf-8')
   let i = 0
+  let mcq_multiply = 0;
   _.each(answers, function(){
       let modelItem
       // On reprend le model pour insérer de nouvelles données
@@ -137,6 +141,7 @@ function makeMCQ (value,directory) {
       if( /(\(v\))/gi.test(answers[i]) ) {
         modelItem.text = modelItem.text.replace(/\(v\)/gi,'')
         modelItem._shouldBeSelected = true
+        mcq_multiply++;
       }
       else{
         modelItem._shouldBeSelected = false
@@ -148,7 +153,9 @@ function makeMCQ (value,directory) {
       i++
   })
 
-
+  if(mcq_multiply > 1) {
+    file._selectable = 2;
+  }
   debug(tempItems);
 
   // Les slides sont maintenant ajouter dans l'objet final
@@ -238,6 +245,100 @@ function makeNarrative (value, directory) {
 
   // Les slides sont maintenant ajouter dans l'objet final
   file._items = tempItems
+
+  // On passe d'un JSON à un string pour pouvoir insérer les données dans le template lodash
+  file = JSON.stringify(file)
+  compiled = _.template(file)
+
+
+  // On le transforme on jolie JSON formater
+  let newValue
+  newValue = JSON.parse(compiled(value))
+
+  component_result += jsonFormat(newValue)+',\n'
+
+  fs.writeFileSync('result/' + directory + '/' +value.composant  + '_' + value._id +  '.json',jsonFormat(newValue)+',', {encoding: 'utf8'});
+}
+
+function makeMultiCam (value, directory) {
+  console.log(value.composant);
+  console.log(value);
+  // TODO : Etendre le systeme pour le model media
+
+  let nbrItems, itemTitle, itemBody, itemImage, compiled
+
+  const tempItems = []
+  debug(tempItems)
+  // Le fichier est lu comme un objet JSON pour manipuler les données
+  let file = fs_extra.readJsonSync('model/' + value.composant + '.json', 'utf-8')
+  file._items = []
+
+  value._parentId = setParentId(value._id)
+  value.body = cleanText(value.body)
+
+  // TODO: Vérifier les trois valeurs pour initialiser nbrItems
+  // On récupère les options pour créer les slides du narrative
+
+  value.media1_title = cleanText(value.media1_title)
+  value.media2_title = cleanText(value.media2_title)
+  value.media3_title = cleanText(value.media3_title)
+  value.media4_title = cleanText(value.media4_title)
+
+  let modelNarrativeItem = fs_extra.readFileSync('model/multicam-item-model.json', 'utf-8')
+
+  if(value.media1_title !== '' ) {
+    // nbrItems = 1;
+
+    let modelItem
+    modelItem = JSON.parse(modelNarrativeItem);
+    modelItem.title = value.media1_title
+    modelItem.source = value.media1_source
+    modelItem.type = value.media1_type
+
+
+    tempItems.push(modelItem)
+  }
+  if(value.media2_title !== '' ) {
+    // nbrItems = 2;
+
+    let modelItem
+    modelItem = JSON.parse(modelNarrativeItem);
+    modelItem.title = value.media2_title
+    modelItem.source = value.media2_source
+    modelItem.type = value.media2_type
+
+
+    tempItems.push(modelItem)
+  }
+  if(value.media3_title !== '' ) {
+    // nbrItems = 3;
+
+    let modelItem
+    modelItem = JSON.parse(modelNarrativeItem);
+    modelItem.title = value.media3_title
+    modelItem.source = value.media3_source
+    modelItem.type = value.media3_type
+
+
+    tempItems.push(modelItem)
+  }
+  if(value.media4_title !== '' ) {
+    // nbrItems = 4;
+
+    let modelItem
+    modelItem = JSON.parse(modelNarrativeItem);
+    modelItem.title = value.media4_title
+    modelItem.source = value.media4_source
+    modelItem.type = value.media4_type
+
+
+    tempItems.push(modelItem)
+  }
+
+  debug(tempItems);
+
+  // Les slides sont maintenant ajouter dans l'objet final
+  file._medias = tempItems
 
   // On passe d'un JSON à un string pour pouvoir insérer les données dans le template lodash
   file = JSON.stringify(file)
