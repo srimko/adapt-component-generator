@@ -1,0 +1,1 @@
+# Component Generator for Adapt
