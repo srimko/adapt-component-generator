@@ -4,7 +4,7 @@
 const fs = require('fs')
 const _ = require('lodash')
 const XLSX = require('xlsx')
-const shell = require('shelljs')
+// const shell = require('shelljs')
 
 // Makers
 const makeBlock = require('./makers/block')
@@ -15,6 +15,7 @@ const makeMultiCam = require('./makers/multicam')
 
 // Tools
 const checkFileExistsSync = require('./tools/checkFileExistsSync')
+const initDirectories = require('./tools/initDirectories')
 
 // TODO : Gérer les arguments
 const fileName = process.argv[2] || 'src/Liste_composant.xlsx'
@@ -35,10 +36,9 @@ if(checkFileExistsSync(fileName)) {
   // TODO : Faire une fonction d'initialisation
   // Initialisation du projet
   let directories = sheet_name_list
-  shell.mkdir('-p','result')
-  _.forEach(sheet_name_list, function(value, key) {
-    shell.mkdir('-p','result/' + value)
-  })
+
+  initDirectories(sheet_name_list)
+
 
   for(let i = 0; i < sheet_name_list.length; i++) {
 
