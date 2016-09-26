@@ -4,7 +4,11 @@
 const fs = require('fs')
 const _ = require('lodash')
 const XLSX = require('xlsx')
-// const shell = require('shelljs')
+const debug = require('debug')('index')
+
+const shell = require('shelljs')
+
+const chalk = require('chalk');
 
 // Makers
 const makeBlock = require('./makers/block')
@@ -18,11 +22,25 @@ const checkFileExistsSync = require('./tools/checkFileExistsSync')
 const initDirectories = require('./tools/initDirectories')
 
 // TODO : Gérer les arguments
-const fileName = process.argv[2] || 'src/Liste_composant.xlsx'
+const fileName = process.argv[2] || 'src/component_list.xlsx'
 
 // TODO : Install debug inside the project
 
-if(checkFileExistsSync(fileName)) {
+if(!checkFileExistsSync(fileName)) {
+  let fileInsideSrcDirectory = shell.ls('src')
+
+  debug('File inside src folder :')
+  _.each(fileInsideSrcDirectory, function(file) {
+    debug(chalk.green(file))
+  })
+
+  console.log(chalk.red('File \'' +fileName + ' \'doesn\'t exist...'))
+  console.log(chalk.white('Check inside your src folder if file exist or launch this command \'DEBUG=* node index.js\' to take a look indie src folder.'))
+
+  // Exit script
+  process.exit();
+}
+else {
   const workbook = XLSX.readFile(fileName)
   const sheet_name_list = workbook.SheetNames
 
@@ -78,9 +96,5 @@ if(checkFileExistsSync(fileName)) {
 
   // Ecriture du fichier block.json
   makeBlock(blockList)
-}
-else {
-  // Exit script
-  console.log('File \'' +fileName + ' \'doesn\'t exist...');
-  process.exit();
+
 }
