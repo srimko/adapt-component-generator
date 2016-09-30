@@ -24,9 +24,9 @@ function makeBlock (blockList) {
 
     let _tempBlock = {}
     _tempBlock._id = blockList[key];
-    _tempBlock._parentId = setParentId(_tempBlock._id, 'a');
-    _tempBlock.title = blockList[key];
-    _tempBlock.type = 'block';
+    _tempBlock._parentId = setParentId(_tempBlock._id, 'a')
+    _tempBlock.title = blockList[key]
+    _tempBlock.type = 'block'
     // _tempBlock.displayTitle = blockList[key];
     _tempBlock.displayTitle = ''
     _tempBlock._trackingId = key
@@ -35,7 +35,7 @@ function makeBlock (blockList) {
 
   })
 
-  fs.writeFileSync('result/block.json',jsonFormat(tempBlock), {encoding: 'utf8'});
+  fs.writeFileSync('result/block.json',jsonFormat(tempBlock), {encoding: 'utf8'})
 }
 
 
