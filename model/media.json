@@ -1,20 +1,20 @@
 {
-  "_id":"<%= _id %>",
-  "_parentId": "<%= _parentId %>",
+  "_id":"",
+  "_parentId": "",
   "_type":"component",
   "_component":"media",
   "_classes":"",
   "_layout":"full",
-  "title": "<%= title %>",
-  "displayTitle": "<%= displayTitle %>",
-  "body": "<%= body %>",
+  "title": "",
+  "displayTitle": "",
+  "body": "",
   "instruction": "",
   "_setCompletionOn":"ended",
   "_useClosedCaptions":true,
   "_startLanguage":"en",
   "_media": {
-        "mp4": "<%= pathvideo %>/<%= mp4 %>",
-        "poster": "<%= pathimage %>/<%= poster %>"
+        "mp4": "",
+        "poster": ""
     },
     "_playerOptions": {
         "poster": "",
@@ -56,4 +56,4 @@
     "_pageLevelProgress": {
     "_isEnabled": true
   }
-},
+}
