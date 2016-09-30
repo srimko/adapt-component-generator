@@ -2,6 +2,7 @@
 
 // Node package
 const fs = require('fs')
+const fs_extra = require('fs-extra')
 const _ = require('lodash')
 const XLSX = require('xlsx')
 const debug = require('debug')('index')
@@ -16,6 +17,7 @@ const makeComponent = require('./makers/component')
 const makeMCQ = require('./makers/mcq')
 const makeNarrative = require('./makers/narrative')
 const makeMultiCam = require('./makers/multicam')
+const makeGraphic = require('./makers/graphic')
 
 // Tools
 const checkFileExistsSync = require('./tools/checkFileExistsSync')
@@ -47,7 +49,8 @@ else {
   // Pour changer de page il faut changer l'indice dans le sheet_name_list ex: 0 pour la page 1, 2 pour la page 3 etc
   // const firstJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[3]])
 
-  var component_result = ''
+  // var component_result = ''
+  var component_result = []
 
   let blockList = []
 
@@ -63,10 +66,12 @@ else {
     // On récupère les feuilles XLSX en entier au format JSON
     let JSONsheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[i]]);
 
+    // debug(JSONsheet[0]._component)
+
     // On itère sur chaque élément du fichier JSON
     JSONsheet.forEach(function(value, key) {
 
-      switch (value.composant) {
+      switch (value._component) {
         case 'narrative':
           makeNarrative(value, sheet_name_list[i], component_result)
           break;
@@ -75,6 +80,9 @@ else {
           break;
         case 'mcq':
           makeMCQ(value, sheet_name_list[i], component_result)
+          break;
+        case 'graphic':
+          makeGraphic(value, sheet_name_list[i], component_result)
           break;
         case undefined:
             // TODO: Gérer les lignes vides et les composant qui ne sont pas encore été créer
@@ -85,14 +93,18 @@ else {
           makeComponent(value, sheet_name_list[i], component_result)
       }
 
-      blockList.push(value._parentId)
+      // blockList.push(value._parentId)
     })
   }
 
   // TODO : Remove last comma in component_result string
 
   // Ecriture du fichier component_result
-  fs.writeFileSync('result/component_result.json',component_result , {encoding: 'utf8'})
+  // fs.writeFileSync('result/component_result.json',component_result , {encoding: 'utf8'})
+  fs_extra.writeJson('result/component_result.json', component_result, function (err) {
+    console.log(err)
+  })
+
 
   // Ecriture du fichier block.json
   makeBlock(blockList)

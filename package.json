@@ -1,6 +1,6 @@
 {
   "name": "component-generator",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "generateur de composantn depuis un CSV",
   "main": "index.js",
   "scripts": {
