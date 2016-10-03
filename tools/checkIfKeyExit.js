@@ -23,9 +23,7 @@ function checkIfKeyExit (value) {
   for(let i = 0; i < objectKeys.length; i++) {
     if(value[objectKeys[i]] === undefined ) {
       value[objectKeys[i]] !== undefined  ? (value[objectKeys[i]]=value[objectKeys[i]]) : (value[objectKeys[i]] = '')
-    }
-    else {
-    }
+    } 
   }
 }
 

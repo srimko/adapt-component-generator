@@ -47,8 +47,7 @@ function makeMCQ (value, directory, component_result) {
         modelItem.text = modelItem.text.replace(/\(v\)/gi,'')
         modelItem._shouldBeSelected = true
         mcq_multiply++;
-      }
-      else{
+      } else{
         modelItem._shouldBeSelected = false
       }
 

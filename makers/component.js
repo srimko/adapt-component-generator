@@ -31,8 +31,7 @@ function makeComponent (value, directory, component_result) {
 
   if( checkFileExistsSync('result/' + directory + '/' +value.composant  + '_' + value._id +  '.json') ) {
     console.log('File ' + chalk.blue(value.composant  + '_' + value._id +  '.json') + chalk.green(' was created') )
-  }
-  else {
+  } else {
     console.log(chalk.red('Error: File ' + chalk.yellow(value.composant  + '_' + value._id +  '.json') + ' wasn\'t created'));
   }
 

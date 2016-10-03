@@ -6,8 +6,7 @@ function setParentId (_id, type) {
 
   if(type === undefined) {
     _parentId[0] = 'b'
-  }
-  else {
+  } else {
     _parentId[0] = type
     _parentId.pop()
   }

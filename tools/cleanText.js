@@ -5,8 +5,7 @@ function cleanText (text) {
     text = text.replace(clearQuote,'\\"');
     let clearRetourLigneLOL = /\n/g;
     text = text.replace(clearRetourLigneLOL, '');
-  }
-  else {
+  } else {
     text = ''
   }
 
