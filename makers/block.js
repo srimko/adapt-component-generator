@@ -7,6 +7,8 @@ const jsonFormat = require('json-format')
 
 const setParentId = require('./../tools/setParentId')
 
+const debug = require('debug')('block')
+
 
  /**
   * Create block.json file
@@ -19,8 +21,10 @@ function makeBlock (blockList) {
 
   let blockFile = fs_extra.readJsonSync('model/block.json', 'utf-8')
   let tempBlock = []
+  debug(blockFile)
 
   _.forEach(blockList, function(value, key) {
+
 
     let _tempBlock = {}
     _tempBlock._id = blockList[key];
