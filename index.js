@@ -59,6 +59,7 @@ if (!checkFileExistsSync(fileName)) {
 
   initDirectories(sheetNameList)
 
+  let componentIterate = 0
   for (let i = 0; i < sheetNameList.length; i++) {
 
     // On récupère les feuilles XLSX en entier au format JSON
@@ -67,7 +68,6 @@ if (!checkFileExistsSync(fileName)) {
     // debug(chalk.red(sheetNameList[i]))
 
     // On itère sur chaque élément du fichier JSON
-    let componentIterate = 0
     JSONsheet.forEach(function (value, key) {
 
       //  Compatability with older file
@@ -77,8 +77,6 @@ if (!checkFileExistsSync(fileName)) {
         value._component = 'intro-anchor'
       if (value._component === 'adapt-yny-sequenceImgScrolling')
         value._component = 'scrolling'
-
-      // debug('' + value._component)
 
       switch (value._component) {
         case 'narrative':
@@ -112,8 +110,6 @@ if (!checkFileExistsSync(fileName)) {
           makeComponent(value, sheetNameList[i], componentResult)
       }
 
-      // debug(componentResult[componentIterate])
-
       blockList.push(componentResult[componentIterate]._parentId)
       componentIterate++
     })
@@ -124,6 +120,5 @@ if (!checkFileExistsSync(fileName)) {
   })
 
   // Ecriture du fichier block.json
-  // debug(blockList)
   makeBlock(blockList)
 }
