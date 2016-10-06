@@ -26,7 +26,7 @@
     "disallowKeywordsOnNewLine": ["else"],
     "disallowMultipleLineBreaks": true,
     "disallowMultipleLineStrings": true,
-    "disallowMultipleVarDecl": true,
+    "disallowMultipleVarDecl": false,
     "disallowSpaceBeforeComma": true,
     "disallowSpaceBeforeSemicolon": true,
     "disallowSpacesInsideTemplateStringPlaceholders": true,
