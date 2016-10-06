@@ -15,6 +15,15 @@ function makeMultiCam (value, directory, componentResult) {
   // Le fichier est lu comme un objet JSON pour manipuler les données
   let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
 
+  _.map(value, function (val, key) {
+    if (key in file)
+      file[key] = val
+
+    if (key === 'body') {
+      file.body = cleanText(val)
+    }
+  })
+
   file._items = []
 
   file._parentId = setParentId(value._id)
