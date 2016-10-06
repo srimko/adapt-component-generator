@@ -11,6 +11,8 @@ const shell = require('shelljs')
 
 const chalk = require('chalk')
 
+const notifier = require('node-notifier')
+
 // Makers
 const makeBlock = require('./makers/block')
 const makeComponent = require('./makers/component')
@@ -117,6 +119,11 @@ if (!checkFileExistsSync(fileName)) {
 
   fsExtra.writeJsonSync('result/componentResult.json', componentResult, 'utf-8', function (err) {
     console.log('err', err)
+  })
+
+  notifier.notify({
+    title: 'Component Generator',
+    message: 'Great job guy !',
   })
 
   // Ecriture du fichier block.json
