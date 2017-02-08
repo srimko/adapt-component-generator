@@ -1,21 +1,20 @@
-# Component Generator for Adapt
+# Générateur de composant pour adapt / ComponentGenerator /
 
-Component generator is a simple script to generate component for Adapt.
+ComponentGenerator est un petit script permettant de générer le code source des composants et block pour un projet adapt.
 
-## Start script
+## Démarrage du script
 
-You must lauch this command to start the script :
+Vous devez lancer la commande suivant pour lancer le script
 ```js
 node index.js src/component_list.xlsx
 ```
 
-If you start the script whitout file source, the script will automatically launch with this argument ``src/component_list.xlsx``. Don't be afraid nothing will be execute, the script will return an error.
+Si vous lancez la commande sans le fichier source le scirpt se lancera automatiquement avec cette argument ``src/component_list.xlsx``. Si le fichier envoyer en parametre n'existe pas le script vous enverra une erreur.
 
+### Les composant de base supportés
 
-
-### Default component supported
-
-You can find all components supported inside model directory. Here a list of them :
+Vous pourrez trouver tout les compodants supportés dans le répertoire `model`.
+une liste de certains d'entre eux :
 
 * block
 * grahic
@@ -32,14 +31,15 @@ You can find all components supported inside model directory. Here a list of the
   ... narrative component have an extra JSON file to generate items 'narrative-item-model'
 
 
-### How to make your makers
+### Comment fabriquer les makers
 
 Commencer par créer le modèle JSON et le placer dans le répoertoire model. Il faut maintenant créer le marker.
 
 
-### YesnYou component supported
+### Les composants YesnYou supportés
 
-Here a list of components created by YesnYou's front developer specialy for their clients. Here a list of them :
+Une liste des composants crés par les développeur front de YesnYou spécialement pour leurs clients :lol:.
+Une liste de certains d'entre eux :
 
 * intro-anchor
 * introjld
@@ -49,15 +49,14 @@ Here a list of components created by YesnYou's front developer specialy for thei
 
 * Scrolling
 
-## Display debug
-If you want to display marker's debug in your terminal, you should excecute a command like
+## Afficher les debug
+Si vous voulez afficher les debug des markers dans votre terminal, vous devrez éxécuter la commande ci-après :
 ```js
 DEBUG=make***** index.js
 ```
+Les étoiles représentent le nom du marker.
 
-Stars are the name of the marker exemple. The first letter must be uppercase ex :makeNarrative, makeMcq
-
-### To do
+### TO DO
 
 * Have to check argument before start script
 * Have to log supported marker

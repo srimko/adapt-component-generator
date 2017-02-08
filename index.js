@@ -42,7 +42,7 @@ if (!checkFileExistsSync(fileName)) {
   })
 
   console.log(chalk.red('File \'' + fileName + ' \'doesn\'t exist...'))
-  console.log(chalk.white('Check inside your src folder if file exist or launch this command \'DEBUG=* node index.js\' to take a look indie src folder.'))
+  console.log(chalk.white('Check inside your src folder if file exist or launch this command \'DEBUG=* node index.js\' to take a look inside src folder.'))
 
   // Exit script
   process.exit()
