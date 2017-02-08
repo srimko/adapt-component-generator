@@ -1,10 +1,9 @@
 function setParentId (_id, type) {
-
   let _parentId = ''
 
   _parentId = _id.split('-')
 
-  if(type === undefined) {
+  if (type === undefined) {
     _parentId[0] = 'b'
   } else {
     _parentId[0] = type
@@ -15,6 +14,5 @@ function setParentId (_id, type) {
 
   return _parentId
 }
-
 
 module.exports = setParentId

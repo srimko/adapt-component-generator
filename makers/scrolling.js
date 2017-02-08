@@ -1,15 +1,15 @@
 const _ = require('lodash')
 
-const fs = require('fs')
+// const fs = require('fs')
 const fsExtra = require('fs-extra')
-const chalk = require('chalk')
+// const chalk = require('chalk')
 
-const jsonFormat = require('json-format')
+// const jsonFormat = require('json-format')
 
 const setParentId = require('./../tools/setParentId')
 const cleanText = require('./../tools/cleanText')
 
-const debug = require('debug')('makerScrolling')
+// const debug = require('debug')('makerScrolling')
 
 function makeScrolling (value, directory, componentResult) {
   // console.log(value.composant);
@@ -17,12 +17,9 @@ function makeScrolling (value, directory, componentResult) {
   let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
 
   _.map(value, function (val, key) {
-    if (key in file)
-      file[key] = val
+    if (key in file) file[key] = val
 
-    if (key === 'body') {
-      file.body = cleanText(val)
-    }
+    if (key === 'body') file.body = cleanText(val)
   })
 
   file._parentId = setParentId(value._id)
@@ -50,8 +47,7 @@ function makeScrolling (value, directory, componentResult) {
   // file._items = tempItems
   componentResult.push(file)
 
-  fsExtra.writeJsonSync('result/' + directory + '/' + value._component  + '_' + value._id +  '.json', file, 'utf-8')
-
+  fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
 }
 
 module.exports = makeScrolling

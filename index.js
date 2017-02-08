@@ -1,7 +1,7 @@
 'use strict'
 
 // Node package
-const fs = require('fs')
+// const fs = require('fs')
 const fsExtra = require('fs-extra')
 const _ = require('lodash')
 const XLSX = require('xlsx')
@@ -57,13 +57,12 @@ if (!checkFileExistsSync(fileName)) {
 
   // TODO : Faire une fonction d'initialisation
   // Initialisation du projet
-  let directories = sheetNameList
+  // let directories = sheetNameList
 
   initDirectories(sheetNameList)
 
   let componentIterate = 0
   for (let i = 0; i < sheetNameList.length; i++) {
-
     // On récupère les feuilles XLSX en entier au format JSON
     let JSONsheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameList[i]])
 
@@ -71,14 +70,10 @@ if (!checkFileExistsSync(fileName)) {
 
     // On itère sur chaque élément du fichier JSON
     JSONsheet.forEach(function (value, key) {
-
       //  Compatability with older file
-      if ('composant' in value)
-        value._component = value.composant
-      if (value._component === 'introjld')
-        value._component = 'intro-anchor'
-      if (value._component === 'adapt-yny-sequenceImgScrolling')
-        value._component = 'scrolling'
+      if ('composant' in value) value._component = value.composant
+      if (value._component === 'introjld') value._component = 'intro-anchor'
+      if (value._component === 'adapt-yny-sequenceImgScrolling') value._component = 'scrolling'
 
       switch (value._component) {
         case 'narrative':
@@ -123,7 +118,7 @@ if (!checkFileExistsSync(fileName)) {
 
   notifier.notify({
     title: 'Component Generator',
-    message: 'Great job guy !',
+    message: 'Great job guy !'
   })
 
   // Ecriture du fichier block.json

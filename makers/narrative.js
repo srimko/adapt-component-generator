@@ -1,10 +1,10 @@
 const _ = require('lodash')
 
-const fs = require('fs')
+// const fs = require('fs')
 const fsExtra = require('fs-extra')
 const chalk = require('chalk')
 
-const jsonFormat = require('json-format')
+// const jsonFormat = require('json-format')
 
 const setParentId = require('./../tools/setParentId')
 const cleanText = require('./../tools/cleanText')
@@ -19,19 +19,13 @@ function makeNarrative (value, directory, componentResult) {
   itemImage = value.item_image.split(';')
 
   // TODO : Trouver/Créer une fonction pour vérfier cetre égalitée
-  if (itemTitle.length ===  itemBody.length &&
-      itemBody.length ===  itemImage.length &&
-      itemImage.length ===  itemTitle.length) {
-
+  if (itemTitle.length === itemBody.length && itemBody.length === itemImage.length && itemImage.length === itemTitle.length) {
     let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
 
     _.map(value, function (val, key) {
-      if (key in file)
-        file[key] = val
+      if (key in file) file[key] = val
 
-      if (key === 'body') {
-        file.body = cleanText(val)
-      }
+      if (key === 'body') file.body = cleanText(val)
     })
 
     file._parentId = setParentId(value._id)
@@ -59,11 +53,10 @@ function makeNarrative (value, directory, componentResult) {
     file._items = tempItems
     componentResult.push(file)
 
-    fsExtra.writeJsonSync('result/' + directory + '/' + value._component  + '_' + value._id +  '.json', file, 'utf-8')
+    fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
   } else {
     debug(chalk.red('Une erreur grave à été trouvé... lol !'))
   }
-
 }
 
 module.exports = makeNarrative

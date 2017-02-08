@@ -1,12 +1,12 @@
 const _ = require('lodash')
 
-const fs = require('fs')
+// const fs = require('fs')
 const fsExtra = require('fs-extra')
 
-const jsonFormat = require('json-format')
+// const jsonFormat = require('json-format')
 
 const setParentId = require('./../tools/setParentId')
-const checkIfKeyExit = require('./../tools/checkIfKeyExit')
+// const checkIfKeyExit = require('./../tools/checkIfKeyExit')
 const cleanText = require('./../tools/cleanText')
 
 const debug = require('debug')('makeMCQ')
@@ -16,12 +16,9 @@ function makeMCQ (value, directory, componentResult) {
   let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
 
   _.map(value, function (val, key) {
-    if (key in file)
-      file[key] = val
+    if (key in file) file[key] = val
 
-    if (key === 'body') {
-      file.body = cleanText(val)
-    }
+    if (key === 'body') file.body = cleanText(val)
   })
 
   file._parentId = setParentId(value._id)
@@ -31,7 +28,7 @@ function makeMCQ (value, directory, componentResult) {
   const tempItems = []
   let mcqMultiply = 0
 
-  answers = value.answer.split(';')
+  let answers = value.answer.split(';')
 
   _.map(answers, function () {
     let modelItem
@@ -62,8 +59,7 @@ function makeMCQ (value, directory, componentResult) {
   file._items = tempItems
   componentResult.push(file)
 
-  fsExtra.writeJsonSync('result/' + directory + '/' + value._component  + '_' + value._id +  '.json', file, 'utf-8')
-
+  fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
 }
 
 module.exports = makeMCQ

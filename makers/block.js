@@ -17,13 +17,11 @@ const debug = require('debug')('block')
   *
   */
 function makeBlock (blockList) {
-
   let blockFile = fsExtra.readJsonSync('model/block.json', 'utf-8')
   let tempBlock = []
   debug(blockFile)
 
   _.forEach(blockList, function (value, key) {
-
     let _tempBlock = {}
     _tempBlock._id = blockList[key]
     _tempBlock._parentId = setParentId(_tempBlock._id, 'a')
@@ -33,7 +31,6 @@ function makeBlock (blockList) {
     _tempBlock._trackingId = key
 
     tempBlock.push(_tempBlock)
-
   })
 
   fs.writeFileSync('result/block.json', jsonFormat(tempBlock), { encoding: 'utf8' })

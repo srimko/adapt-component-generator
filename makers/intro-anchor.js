@@ -37,8 +37,7 @@ function makeIntroAnchor (value, directory, componentResult) {
 
   componentResult.push(file)
 
-  fsExtra.writeJsonSync('result/' + directory + '/' + value._component  + '_' + value._id +  '.json', file, 'utf-8')
-
+  fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
 }
 
 module.exports = makeIntroAnchor
