@@ -58,7 +58,7 @@ Les étoiles représentent le nom du marker.
 
 ### TO DO
 
-* Have to check argument before start script
+* Vérifier les arguments avant le démarrage du script
 * Have to log supported marker
 * Write test to check before start script if xlsx file is correct.
 * Write test to check if makers works correctly
