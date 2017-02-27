@@ -1,6 +1,6 @@
 {
-  "_id":"<%= _id %>",
-  "_parentId":"<%= _parentId %>",
+  "_id":"",
+  "_parentId":"",
   "_type":"component",
   "_component":"mcq",
   "_classes":"",
@@ -12,9 +12,9 @@
   "_selectable":1,
   "_canShowModelAnswer": true,
   "_recordInteraction":true,
-  "title": "<%= title %>",
-  "displayTitle": "<%= displayTitle %>",
-  "body": "<%= body %>",
+  "title": "",
+  "displayTitle": "",
+  "body": "",
   "instruction": "",
   "_items": [
     {

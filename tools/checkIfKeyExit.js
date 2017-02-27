@@ -20,14 +20,11 @@ function checkIfKeyExit (value) {
     'media4_title',
     'media4_source',
     'media4_type']
-  for(let i = 0; i < objectKeys.length; i++) {
-    if(value[objectKeys[i]] === undefined ) {
-      value[objectKeys[i]] !== undefined  ? (value[objectKeys[i]]=value[objectKeys[i]]) : (value[objectKeys[i]] = '')
-    }
-    else {
+  for (let i = 0; i < objectKeys.length; i++) {
+    if (value[objectKeys[i]] === undefined) {
+      value[objectKeys[i]] !== undefined ? (value[objectKeys[i]] = value[objectKeys[i]]) : (value[objectKeys[i]] = '')
     }
   }
 }
-
 
 module.exports = checkIfKeyExit

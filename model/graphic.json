@@ -1,21 +1,21 @@
 {
-  "_id":"<%= _id %>",
-  "_parentId": "<%= _parentId %>",
+  "_id":"",
+  "_parentId": "",
   "_type":"component",
   "_component":"graphic",
   "_classes":"",
   "_layout":"full",
-  "title": "<%= title %>",
-  "displayTitle": "<%= displayTitle %>",
-  "body": "<%= body %>",
+  "title": "",
+  "displayTitle": "",
+  "body": "",
   "instruction":"",
   "_graphic": {
-      "alt": "<%= title %>",
-      "large": "<%= pathimage %>/<%= poster %>",
-      "small": "<%= pathimage %>/<%= poster %>",
+      "alt": "",
+      "large": "",
+      "small": "",
       "attribution":"Copyright © 2015"
   },
   "_pageLevelProgress": {
     "_isEnabled": true
   }
-},
+}

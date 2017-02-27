@@ -1,14 +1,17 @@
-"use strict";
+'use strict'
 
 // Node package
-const fs = require('fs')
+// const fs = require('fs')
+const fsExtra = require('fs-extra')
 const _ = require('lodash')
 const XLSX = require('xlsx')
 const debug = require('debug')('index')
 
 const shell = require('shelljs')
 
-const chalk = require('chalk');
+const chalk = require('chalk')
+
+const notifier = require('node-notifier')
 
 // Makers
 const makeBlock = require('./makers/block')
@@ -16,6 +19,10 @@ const makeComponent = require('./makers/component')
 const makeMCQ = require('./makers/mcq')
 const makeNarrative = require('./makers/narrative')
 const makeMultiCam = require('./makers/multicam')
+const makeGraphic = require('./makers/graphic')
+const makeMedia = require('./makers/media')
+const makeIntroAnchor = require('./makers/intro-anchor')
+const makeScrolling = require('./makers/scrolling')
 
 // Tools
 const checkFileExistsSync = require('./tools/checkFileExistsSync')
@@ -26,75 +33,94 @@ const fileName = process.argv[2] || 'src/component_list.xlsx'
 
 // TODO : Install debug inside the project
 
-if(!checkFileExistsSync(fileName)) {
+if (!checkFileExistsSync(fileName)) {
   let fileInsideSrcDirectory = shell.ls('src')
 
   debug('File inside src folder :')
-  _.each(fileInsideSrcDirectory, function(file) {
+  _.each(fileInsideSrcDirectory, function (file) {
     debug(chalk.green(file))
   })
 
-  console.log(chalk.red('File \'' +fileName + ' \'doesn\'t exist...'))
-  console.log(chalk.white('Check inside your src folder if file exist or launch this command \'DEBUG=* node index.js\' to take a look indie src folder.'))
+  console.log(chalk.red('File \'' + fileName + ' \'doesn\'t exist...'))
+  console.log(chalk.white('Check inside your src folder if file exist or launch this command \'DEBUG=* node index.js\' to take a look inside src folder.'))
 
   // Exit script
-  process.exit();
-}
-else {
+  process.exit()
+} else {
   const workbook = XLSX.readFile(fileName)
-  const sheet_name_list = workbook.SheetNames
+  const sheetNameList = workbook.SheetNames
 
-  // Pour changer de page il faut changer l'indice dans le sheet_name_list ex: 0 pour la page 1, 2 pour la page 3 etc
-  // const firstJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[3]])
-
-  var component_result = ''
+  // var componentResult = ''
+  var componentResult = []
 
   let blockList = []
 
   // TODO : Faire une fonction d'initialisation
   // Initialisation du projet
-  let directories = sheet_name_list
+  // let directories = sheetNameList
 
-  initDirectories(sheet_name_list)
+  initDirectories(sheetNameList)
 
-
-  for(let i = 0; i < sheet_name_list.length; i++) {
-
+  let componentIterate = 0
+  for (let i = 0; i < sheetNameList.length; i++) {
     // On récupère les feuilles XLSX en entier au format JSON
-    let JSONsheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[i]]);
+    let JSONsheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameList[i]])
+
+    // debug(chalk.red(sheetNameList[i]))
 
     // On itère sur chaque élément du fichier JSON
-    JSONsheet.forEach(function(value, key) {
+    JSONsheet.forEach(function (value, key) {
+      //  Compatability with older file
+      if ('composant' in value) value._component = value.composant
+      if (value._component === 'introjld') value._component = 'intro-anchor'
+      if (value._component === 'adapt-yny-sequenceImgScrolling') value._component = 'scrolling'
 
-      switch (value.composant) {
+      switch (value._component) {
         case 'narrative':
-          makeNarrative(value, sheet_name_list[i], component_result)
-          break;
+          makeNarrative(value, sheetNameList[i], componentResult)
+          break
         case 'multicam':
-          makeMultiCam(value, sheet_name_list[i], component_result)
-          break;
+          makeMultiCam(value, sheetNameList[i], componentResult)
+          break
+        case 'media':
+          makeMedia(value, sheetNameList[i], componentResult)
+          break
         case 'mcq':
-          makeMCQ(value, sheet_name_list[i], component_result)
-          break;
+          makeMCQ(value, sheetNameList[i], componentResult)
+          break
+        case 'intro-anchor':
+          makeIntroAnchor(value, sheetNameList[i], componentResult)
+          break
+        case 'scrolling':
+          makeScrolling(value, sheetNameList[i], componentResult)
+          break
+        case 'graphic':
+          makeGraphic(value, sheetNameList[i], componentResult)
+          break
         case undefined:
-            // TODO: Gérer les lignes vides et les composant qui ne sont pas encore été créer
-            console.log('Error : Composant ' + value.composant + ' doesn\'t exist...')
-            // process.exit()
-          break;
+
+          // TODO: Gérer les lignes vides et les composant qui ne sont pas encore été créer
+          console.log('Error : Component ' + value._component + ' doesn\'t exist...')
+          process.exit()
+          break
         default:
-          makeComponent(value, sheet_name_list[i], component_result)
+          makeComponent(value, sheetNameList[i], componentResult)
       }
 
-      blockList.push(value._parentId)
+      blockList.push(componentResult[componentIterate]._parentId)
+      componentIterate++
     })
   }
 
-  // TODO : Remove last comma in component_result string
+  fsExtra.writeJsonSync('result/componentResult.json', componentResult, 'utf-8', function (err) {
+    console.log('err', err)
+  })
 
-  // Ecriture du fichier component_result
-  fs.writeFileSync('result/component_result.json',component_result , {encoding: 'utf8'})
+  notifier.notify({
+    title: 'Component Generator',
+    message: 'Great job guy !'
+  })
 
   // Ecriture du fichier block.json
   makeBlock(blockList)
-
 }

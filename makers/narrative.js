@@ -1,43 +1,45 @@
 const _ = require('lodash')
 
-const fs = require('fs')
-const fs_extra = require('fs-extra')
+// const fs = require('fs')
+const fsExtra = require('fs-extra')
+const chalk = require('chalk')
 
-const jsonFormat = require('json-format')
+// const jsonFormat = require('json-format')
 
 const setParentId = require('./../tools/setParentId')
 const cleanText = require('./../tools/cleanText')
 
-const debug = require('debug')('index')
+const debug = require('debug')('makerNarrative')
 
-function makeNarrative (value, directory, component_result) {
+function makeNarrative (value, directory, componentResult) {
   // console.log(value.composant);
-  // TODO : Etendre le systeme pour le model media
-
-  let nbrItems, itemTitle, itemBody, itemImage, compiled
-
-  const tempItems = []
-  debug(tempItems)
-  // Le fichier est lu comme un objet JSON pour manipuler les données
-  let file = fs_extra.readJsonSync('model/' + value.composant + '.json', 'utf-8')
-  file._items = []
-
-  value._parentId = setParentId(value._id)
-  value.body = cleanText(value.body)
-
-  // TODO: Vérifier les trois valeurs pour initialiser nbrItems
-  // On récupère les options pour créer les slides du narrative
-  nbrItems = value.items
+  let itemTitle, itemBody, itemImage
   itemTitle = value.item_title.split(';')
   itemBody = value.item_body.split(';')
   itemImage = value.item_image.split(';')
 
-  let modelNarrativeItem = fs_extra.readFileSync('model/narrative-item-model.json', 'utf-8')
-  let i = 0
-  _.each(itemTitle, function(){
+  // TODO : Trouver/Créer une fonction pour vérfier cetre égalitée
+  if (itemTitle.length === itemBody.length && itemBody.length === itemImage.length && itemImage.length === itemTitle.length) {
+    let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
+
+    _.map(value, function (val, key) {
+      if (key in file) file[key] = val
+
+      if (key === 'body') file.body = cleanText(val)
+    })
+
+    file._parentId = setParentId(value._id)
+
+    let modelNarrativeItem = fsExtra.readFileSync('model/narrative-item-model.json', 'utf-8')
+
+    const tempItems = []
+    let i = 0
+
+    _.each(itemTitle, function () {
       let modelItem
+
       // On reprend le model pour insérer de nouvelles données
-      modelItem = JSON.parse(modelNarrativeItem);
+      modelItem = JSON.parse(modelNarrativeItem)
       modelItem.title = itemTitle[i]
       modelItem.body = itemBody[i]
       modelItem._graphic.src = value.pathimage + '/' + itemImage[i]
@@ -45,27 +47,16 @@ function makeNarrative (value, directory, component_result) {
 
       // On insère dans l'objet temporaire
       tempItems.push(modelItem)
-      // debug(itemBody[i], i)
       i++
-  })
+    })
 
-  debug(tempItems);
+    file._items = tempItems
+    componentResult.push(file)
 
-  // Les slides sont maintenant ajouter dans l'objet final
-  file._items = tempItems
-
-  // On passe d'un JSON à un string pour pouvoir insérer les données dans le template lodash
-  file = JSON.stringify(file)
-  compiled = _.template(file)
-
-
-  // On le transforme on jolie JSON formater
-  let newValue
-  newValue = JSON.parse(compiled(value))
-
-  component_result += jsonFormat(newValue)+',\n'
-
-  fs.writeFileSync('result/' + directory + '/' +value.composant  + '_' + value._id +  '.json',jsonFormat(newValue)+',', {encoding: 'utf8'});
+    fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
+  } else {
+    debug(chalk.red('Une erreur grave à été trouvé... lol !'))
+  }
 }
 
 module.exports = makeNarrative

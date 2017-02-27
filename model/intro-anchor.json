@@ -1,20 +1,20 @@
 {
-  "_id":"<%= _id %>",
-  "_parentId": "<%= _parentId %>",
+  "_id":"",
+  "_parentId": "",
   "_type":"component",
   "_component":"intro-anchor",
   "_classes":"",
   "_layout":"full",
-  "title": "<%= title %>",
-  "displayTitle": "<%= displayTitle %>",
-  "body": "<%= body %>",
+  "title": "",
+  "displayTitle": "",
+  "body": "",
   "instruction":"",
   "_graphic": {
       "alt": "",
-      "large": "<%= pathimage %>/<%= poster %>",
-      "small": "<%= pathimage %>/<%= poster %>"
+      "large": "",
+      "small": ""
   },
   "_pageLevelProgress": {
     "_isEnabled": true
   }
-},
+}
