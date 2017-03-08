@@ -1,0 +1,38 @@
+{
+  "_id": "",
+  "_parentId":"",
+  "_classes": "",
+  "_type":"component",
+  "_component": "hotgraphic",
+  "_layout": "full",
+  "title": "",
+  "displayTitle": "",
+  "body": "",
+  "mobileBody": "",
+  "instruction":"",
+  "mobileInstruction": "",
+  "_setCompletionOn":"allItems",
+  "_useGraphicsAsPins": false,
+  "_canCycleThroughPagination": false,
+  "_hidePagination": false,
+  "_graphic": {
+    "src": "",
+    "alt": ""
+  },
+  "_items": [
+    {
+      "title": "",
+      "body": "",
+      "_graphic": {
+          "src": "",
+          "alt": "",
+          "_classes": ""
+      },
+      "pinAlt": "",
+      "strapline": "",
+      "_classes": "top-left",
+      "_top": 5,
+      "_left": 20
+    }
+  ]
+}
