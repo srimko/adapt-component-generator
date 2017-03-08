@@ -20,6 +20,7 @@ const makeMCQ = require('./makers/mcq')
 const makeNarrative = require('./makers/narrative')
 const makeMultiCam = require('./makers/multicam')
 const makeGraphic = require('./makers/graphic')
+const makeHotGraphic = require('./makers/hotgraphic')
 const makeMedia = require('./makers/media')
 const makeIntroAnchor = require('./makers/intro-anchor')
 const makeScrolling = require('./makers/scrolling')
@@ -55,8 +56,7 @@ if (!checkFileExistsSync(fileName)) {
 
   let blockList = []
 
-  // TODO : Faire une fonction d'initialisation
-  // Initialisation du projet
+   // Initialisation du projet
   // let directories = sheetNameList
 
   initDirectories(sheetNameList)
@@ -96,6 +96,9 @@ if (!checkFileExistsSync(fileName)) {
           break
         case 'graphic':
           makeGraphic(value, sheetNameList[i], componentResult)
+          break
+        case 'hotgraphic':
+          makeHotGraphic(value, sheetNameList[i], componentResult)
           break
         case undefined:
 
