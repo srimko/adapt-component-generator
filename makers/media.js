@@ -19,6 +19,7 @@ function makeMedia (value, directory, componentResult) {
     if (key === 'body') file.body = cleanText(val)
   })
 
+  console.log(value.mp4);
   file._media.mp4 = value.pathvideo + '/' + value.mp4
   file._media.poster = value.pathvideo + '/' + value.poster
 

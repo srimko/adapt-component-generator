@@ -29,6 +29,7 @@ function makeBlock (blockList) {
     _tempBlock.type = 'block'
     _tempBlock.displayTitle = ''
     _tempBlock._trackingId = key
+    _tempBlock._classes = ''
 
     tempBlock.push(_tempBlock)
   })

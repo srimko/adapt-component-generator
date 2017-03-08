@@ -22,7 +22,10 @@ function makeScrolling (value, directory, componentResult) {
     if (key === 'body') file.body = cleanText(val)
   })
 
+  file._component = "adapt-yny-sequenceImgScrolling"
+
   file._parentId = setParentId(value._id)
+  file.repertory = value.pathimage
 
   // let modelNarrativeItem = fsExtra.readFileSync('model/narrative-item-model.json', 'utf-8')
   //

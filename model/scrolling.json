@@ -13,6 +13,7 @@
   "image_width": "",
   "image_height": "",
   "totalFrames": "",
+  "frames": 5,
   "pointers": [
     {
       "id":"p_1",
@@ -20,7 +21,7 @@
       "start":20,
       "end": 29,
       "_top": 57,
-      "_left": 71.7,
+      "_left": 71,
       "body": "<a href='#/id/c-coupe-courte-03' class='goToComponent' data-goToComponent='c-coupe-courte-03' ><img src='course/en/images/coupe-courte/link_plane/coupe_courte_plane_point1.png'/></a>",
       "hotspot": {
         "src": "course/en/images/coupe-courte/hotspot_espace/coupe_courte_geo_espace5.png",

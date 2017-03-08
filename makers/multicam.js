@@ -6,7 +6,7 @@ const fsExtra = require('fs-extra')
 const setParentId = require('./../tools/setParentId')
 const cleanText = require('./../tools/cleanText')
 
-// const debug = require('debug')('makeMultiCam')
+const debug = require('debug')('makeMultiCam')
 
 function makeMultiCam (value, directory, componentResult) {
   const tempItems = []
@@ -23,7 +23,9 @@ function makeMultiCam (value, directory, componentResult) {
   file._items = []
 
   file._parentId = setParentId(value._id)
+  file._component = "mediaMultiCam"
   file.body = cleanText(value.body)
+  file.poster = value.pathvideo + "/" + value.poster 
 
   value.media1_title = cleanText(value.media1_title)
   value.media2_title = cleanText(value.media2_title)
@@ -78,6 +80,9 @@ function makeMultiCam (value, directory, componentResult) {
     tempItems.push(modelItem)
   }
 
+  debug(tempItems)
+
+  file._medias = tempItems
   componentResult.push(file)
 
   // fs.writeFileSync('result/' + directory + '/' + value.composant  + '_' + value._id +  '.json', jsonFormat(newValue) + ',', { encoding: 'utf8' })
