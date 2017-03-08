@@ -1,13 +1,14 @@
 const fs = require('fs')
 
 function checkFileExistsSync (filepath) {
-  let flag = true
+  let isExists = false
   try {
     fs.accessSync(filepath, fs.F_OK)
+    isExists = true
   } catch (e) {
-    flag = false
+    if(e) console.log(e)
   }
-  return flag
+  return isExists
 }
 
 module.exports = checkFileExistsSync
