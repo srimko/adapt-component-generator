@@ -11,7 +11,7 @@ node index.js src/component_list.xlsx
 
 Si vous lancez la commande sans le fichier source le scirpt se lancera automatiquement avec cette argument ``src/component_list.xlsx``. Si le fichier envoyer en parametre n'existe pas le script vous enverra une erreur.
 
-### Les composant de base supportés
+### Les composants de base supportés
 
 Vous pourrez trouver tout les compodants supportés dans le répertoire `model`.
 une liste de certains d'entre eux :
@@ -49,7 +49,7 @@ Une liste de certains d'entre eux :
 
 * Scrolling
 
-## Afficher les debug
+## Afficher les debugs
 Si vous voulez afficher les debug des markers dans votre terminal, vous devrez éxécuter la commande ci-après :
 ```js
 DEBUG=make***** index.js
