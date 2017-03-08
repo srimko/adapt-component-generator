@@ -7,15 +7,3 @@
   - Si le composant n'existe pas vérifier le comportement
 
 */
-
-const testName = 'Tester maker'
-
-const _ = require('lodash')
-
-const fs = require('fs')
-const fsExtra = require('fs-extra')
-
-const jsonFormat = require('json-format')
-const debug = require('debug')
-
-debug('testing', testName)
