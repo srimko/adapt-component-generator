@@ -18,7 +18,7 @@ function makeIntroAnchor (value, directory, componentResult) {
 
   _.map(value, function (val, key) {
     if (key in file) {
-      file[key] = val
+      file[key] = val.trim()
       debug(key)
     }
 

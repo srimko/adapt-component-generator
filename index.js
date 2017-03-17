@@ -110,6 +110,8 @@ if (!checkFileExistsSync(fileName)) {
           makeComponent(value, sheetNameList[i], componentResult)
       }
 
+      // console.log(componentResult[componentIterate])
+      // console.log('-----')
       blockList.push(componentResult[componentIterate]._parentId)
       componentIterate++
     })

@@ -15,7 +15,7 @@ function makeMultiCam (value, directory, componentResult) {
   let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
 
   _.map(value, function (val, key) {
-    if (key in file) file[key] = val
+    if (key in file) file[key] = val.trim()
 
     if (key === 'body') file.body = cleanText(val)
   })
@@ -25,7 +25,7 @@ function makeMultiCam (value, directory, componentResult) {
   file._parentId = setParentId(value._id)
   file._component = "mediaMultiCam"
   file.body = cleanText(value.body)
-  file.poster = value.pathvideo + "/" + value.poster 
+  file.poster = value.pathvideo + "/" + value.poster
 
   value.media1_title = cleanText(value.media1_title)
   value.media2_title = cleanText(value.media2_title)

@@ -14,12 +14,11 @@ function makeMedia (value, directory, componentResult) {
   let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
 
   _.map(value, function (val, key) {
-    if (key in file) file[key] = val
+    if (key in file) file[key] = val.trim()
 
     if (key === 'body') file.body = cleanText(val)
   })
 
-  console.log(value.mp4);
   file._media.mp4 = value.pathvideo + '/' + value.mp4
   file._media.poster = value.pathvideo + '/' + value.poster
 

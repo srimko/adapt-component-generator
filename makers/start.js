@@ -24,7 +24,7 @@ function makeStart (value, directory, componentResult) {
 
   _.map(value, function (val, key) {
     if (key in file)
-      file[key] = val
+      file[key] = val.trim()
 
     if (key === 'body') {
       file.body = cleanText(val)

@@ -13,13 +13,20 @@ const debug = require('debug')('makerNarrative')
 
 function makeNarrative (value, directory, componentResult) {
   // console.log(value.composant);
+
   let itemTitle, itemBody, itemImage
   itemTitle = value.item_title.split(';')
   itemBody = value.item_body.split(';')
   itemImage = value.item_image.split(';')
 
   // TODO : Trouver/Créer une fonction pour vérfier cetre égalitée
-  if (itemTitle.length === itemBody.length && itemBody.length === itemImage.length && itemImage.length === itemTitle.length) {
+  console.log(value._id)
+  console.log((itemTitle.length === itemBody.length))
+  console.log((itemBody.length === itemImage.length))
+  console.log((itemImage.length === itemTitle.length))
+  console.log((value.items !== '1'))
+  console.log('-----')
+  if ((itemTitle.length === itemBody.length) && (itemBody.length === itemImage.length) && (itemImage.length === itemTitle.length) && (value.items !== '1')) {
     let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
 
     _.map(value, function (val, key) {
@@ -55,7 +62,35 @@ function makeNarrative (value, directory, componentResult) {
 
     fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
   } else {
-    debug(chalk.red('Une erreur grave à été trouvé... lol !'))
+    if(value.items === '1' ) {
+      let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
+
+      _.map(value, function (val, key) {
+        if (key in file) file[key] = val.trim()
+
+        if (key === 'body') file.body = cleanText(val)
+      })
+
+      file._parentId = setParentId(value._id)
+
+      let modelNarrativeItem = fsExtra.readFileSync('model/narrative-item-model.json', 'utf-8')
+      const tempItems = []
+      modelItem = JSON.parse(modelNarrativeItem)
+      modelItem.title = value.item_title
+      modelItem.body = value.item_body
+      modelItem._graphic.src = value.pathimage + '/' + value.item_image
+      modelItem.strapline = value.item_title
+
+      // On insère dans l'objet temporaire
+      tempItems.push(modelItem)
+
+      file._items = tempItems
+      componentResult.push(file)
+
+      fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
+    } else {
+      console.log(chalk.red('Une erreur grave à été trouvé...!'))
+    }
   }
 }
 
