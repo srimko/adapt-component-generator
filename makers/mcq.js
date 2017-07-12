@@ -53,7 +53,7 @@ function makeMCQ (value, directory, componentResult) {
 
   debug(mcqMultiply)
   if (mcqMultiply > 1) {
-    file._selectable = 2
+    file._selectable = mcqMultiply
   }
 
   file._items = tempItems

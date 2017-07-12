@@ -72,6 +72,7 @@ function makeNarrative (value, directory, componentResult) {
       })
 
       file._parentId = setParentId(value._id)
+      file._classes = 'one'
 
       let modelNarrativeItem = fsExtra.readFileSync('model/narrative-item-model.json', 'utf-8')
       const tempItems = []
