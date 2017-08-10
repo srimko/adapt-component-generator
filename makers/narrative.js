@@ -16,16 +16,12 @@ function makeNarrative (value, directory, componentResult) {
 
   let itemTitle, itemBody, itemImage
   itemTitle = value.item_title.split(';')
+  console.log(itemTitle)
   itemBody = value.item_body.split(';')
+  console.log(itemBody)
   itemImage = value.item_image.split(';')
 
   // TODO : Trouver/Créer une fonction pour vérfier cetre égalitée
-  console.log(value._id)
-  console.log((itemTitle.length === itemBody.length))
-  console.log((itemBody.length === itemImage.length))
-  console.log((itemImage.length === itemTitle.length))
-  console.log((value.items !== '1'))
-  console.log('-----')
   if ((itemTitle.length === itemBody.length) && (itemBody.length === itemImage.length) && (itemImage.length === itemTitle.length) && (value.items !== '1')) {
     let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
 

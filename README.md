@@ -1,4 +1,4 @@
-# Générateur de composant pour adapt / ComponentGenerator /
+# Générateur de composant pour adapt / ComponentGenerator V1.0.0
 
 ComponentGenerator est un petit script permettant de générer le code source des composants et block pour un projet adapt.
 
