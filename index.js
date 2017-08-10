@@ -71,7 +71,7 @@ if (!checkFileExistsSync(fileName)) {
     // On itère sur chaque élément du fichier JSON
     JSONsheet.forEach(function (value, key) {
       //  Compatability with older file
-      if ('composant' in value) value._component = value.composant
+      if ('composant' in value) value._component = _.toLower((_.trim(value.composant)))
       if (value._component === 'introjld') value._component = 'intro-anchor'
       if (value._component === 'adapt-yny-sequenceImgScrolling') value._component = 'scrolling'
 
