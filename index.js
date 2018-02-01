@@ -103,7 +103,7 @@ if (!checkFileExistsSync(fileName)) {
         case undefined:
 
           // TODO: Gérer les lignes vides et les composant qui ne sont pas encore été créer
-          console.log('Error : Component ' + value._component + ' doesn\'t exist...')
+          console.log('Error : Component "' + value._component + '" ' + sheetNameList[i] + ' doesn\'t exist...')
           process.exit()
           break
         default:
