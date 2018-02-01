@@ -4,6 +4,7 @@ const fs = require('fs')
 const fsExtra = require('fs-extra')
 
 const jsonFormat = require('json-format')
+const path = require('path')
 
 const setParentId = require('./../tools/setParentId')
 
@@ -16,7 +17,7 @@ const debug = require('debug')('block')
   * @return {nothing}
   *
   */
-function makeBlock (blockList) {
+function makeBlock (repoPath, blockList) {
   let blockFile = fsExtra.readJsonSync('model/block.json', 'utf-8')
   let tempBlock = []
   debug(blockFile)
@@ -34,7 +35,7 @@ function makeBlock (blockList) {
     tempBlock.push(_tempBlock)
   })
 
-  fs.writeFileSync('result/block.json', jsonFormat(tempBlock), { encoding: 'utf8' })
+  fsExtra.writeJsonSync(path.join(repoPath, 'block.json'), jsonFormat(tempBlock), { encoding: 'utf8' })
 }
 
 module.exports = makeBlock

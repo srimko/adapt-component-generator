@@ -2,13 +2,14 @@ const _ = require('lodash')
 
 // const fs = require('fs')
 const fsExtra = require('fs-extra')
+const path = require('path')
 
 const setParentId = require('./../tools/setParentId')
 const cleanText = require('./../tools/cleanText')
 
 const debug = require('debug')('makeMultiCam')
 
-function makeMultiCam (value, directory, componentResult) {
+function makeMultiCam (value, repoPath, directory, componentResult) {
   const tempItems = []
 
   // Le fichier est lu comme un objet JSON pour manipuler les données
@@ -85,8 +86,7 @@ function makeMultiCam (value, directory, componentResult) {
   file._medias = tempItems
   componentResult.push(file)
 
-  // fs.writeFileSync('result/' + directory + '/' + value.composant  + '_' + value._id +  '.json', jsonFormat(newValue) + ',', { encoding: 'utf8' })
-  fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
+  fsExtra.writeJsonSync(path.join(repoPath, directory, value._component + '_' + value._id + '.json'), file, 'utf-8')
 }
 
 module.exports = makeMultiCam

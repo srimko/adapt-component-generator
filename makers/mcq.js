@@ -2,6 +2,7 @@ const _ = require('lodash')
 
 // const fs = require('fs')
 const fsExtra = require('fs-extra')
+const path = require('path')
 
 // const jsonFormat = require('json-format')
 
@@ -11,7 +12,7 @@ const cleanText = require('./../tools/cleanText')
 
 const debug = require('debug')('makeMCQ')
 
-function makeMCQ (value, directory, componentResult) {
+function makeMCQ (value, repoPath, directory, componentResult) {
   // Le fichier est lu comme un objet JSON pour manipuler les données
   let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
 
@@ -59,7 +60,7 @@ function makeMCQ (value, directory, componentResult) {
   file._items = tempItems
   componentResult.push(file)
 
-  fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
+  fs.writeJsonSync(path.join(repoPath, directory, value._component + '_' + value._id + '.json'), file, 'utf-8')
 }
 
 module.exports = makeMCQ

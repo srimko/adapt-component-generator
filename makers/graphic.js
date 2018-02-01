@@ -4,6 +4,7 @@ const fsExtra = require('fs-extra')
 
 // For colors
 const chalk = require('chalk')
+const path = require('path')
 
 const debug = require('debug')('markerGraphic')
 
@@ -13,7 +14,7 @@ const checkIfKeyExit = require('./../tools/checkIfKeyExit')
 const cleanText = require('./../tools/cleanText')
 const checkFileExistsSync = require('./../tools/checkFileExistsSync')
 
-function makeGraphic (value, directory, componentResult) {
+function makeGraphic (value, repoPath, directory, componentResult) {
   let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
 
   _.map(value, function (val, key) {
@@ -37,7 +38,7 @@ function makeGraphic (value, directory, componentResult) {
 
   componentResult.push(file)
 
-  fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
+  fsExtra.writeJsonSync(path.join(repoPath, directory, value._component + '_' + value._id + '.json'), file, 'utf-8')
 }
 
 module.exports = makeGraphic

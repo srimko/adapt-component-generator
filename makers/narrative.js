@@ -3,6 +3,7 @@ const _ = require('lodash')
 // const fs = require('fs')
 const fsExtra = require('fs-extra')
 const chalk = require('chalk')
+const path = require('path')
 
 // const jsonFormat = require('json-format')
 
@@ -11,14 +12,14 @@ const cleanText = require('./../tools/cleanText')
 
 const debug = require('debug')('makerNarrative')
 
-function makeNarrative (value, directory, componentResult) {
+function makeNarrative (value, repoPath, directory, componentResult) {
   // console.log(value.composant);
 
   let itemTitle, itemBody, itemImage
   itemTitle = value.item_title.split(';')
-  console.log(itemTitle)
+  // console.log(itemTitle)
   itemBody = value.item_body.split(';')
-  console.log(itemBody)
+  // console.log(itemBody)
   itemImage = value.item_image.split(';')
 
   // TODO : Trouver/Créer une fonction pour vérfier cetre égalitée
@@ -56,7 +57,7 @@ function makeNarrative (value, directory, componentResult) {
     file._items = tempItems
     componentResult.push(file)
 
-    fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
+    fsExtra.writeJsonSync(path.join(repoPath, directory, value._component + '_' + value._id + '.json'), file, 'utf-8')
   } else {
     if(value.items === '1' ) {
       let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
@@ -84,7 +85,7 @@ function makeNarrative (value, directory, componentResult) {
       file._items = tempItems
       componentResult.push(file)
 
-      fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
+      fsExtra.writeJsonSync(path.join(repoPath, directory, value._component + '_' + value._id + '.json'), file, 'utf-8')
     } else {
       console.log(chalk.red('Une erreur grave à été trouvé...!'))
     }

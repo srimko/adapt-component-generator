@@ -18,7 +18,7 @@ const debug = require('debug')('makeStart')
   * @return {nothing} a file named start.json was created inside result directory
   *
   */
-function makeStart (value, directory, componentResult) {
+function makeStart (value, repoPath, directory, componentResult) {
 
   let blockFile = fsExtra.readJsonSync('model/block.json', 'utf-8')
 
@@ -35,7 +35,7 @@ function makeStart (value, directory, componentResult) {
 
   componentResult.push(file)
 
-  fsExtra.writeJsonSync('result/' + directory + '/' + value._component  + '_' + value._id +  '.json', file, 'utf-8')
+  fsExtra.writeJsonSync(path.join(repoPath, directory, value._component + '_' + value._id + '.json'), file, 'utf-8')
 }
 
 module.exports = makeStart

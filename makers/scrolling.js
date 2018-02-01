@@ -2,6 +2,7 @@ const _ = require('lodash')
 
 // const fs = require('fs')
 const fsExtra = require('fs-extra')
+const path = require('path')
 // const chalk = require('chalk')
 
 // const jsonFormat = require('json-format')
@@ -11,7 +12,7 @@ const cleanText = require('./../tools/cleanText')
 
 // const debug = require('debug')('makerScrolling')
 
-function makeScrolling (value, directory, componentResult) {
+function makeScrolling (value, repoPath, directory, componentResult) {
   // console.log(value.composant);
 
   let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
@@ -50,7 +51,7 @@ function makeScrolling (value, directory, componentResult) {
   // file._items = tempItems
   componentResult.push(file)
 
-  fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
+  fsExtra.writeJsonSync(path.join(repoPath, directory, value._component + '_' + value._id + '.json'), file, 'utf-8')
 }
 
 module.exports = makeScrolling

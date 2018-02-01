@@ -6,6 +6,7 @@ const fsExtra = require('fs-extra')
 const _ = require('lodash')
 const XLSX = require('xlsx')
 const debug = require('debug')('index')
+const path = require('path')
 
 const shell = require('shelljs')
 
@@ -28,38 +29,31 @@ const makeScrolling = require('./makers/scrolling')
 // Tools
 const checkFileExistsSync = require('./tools/checkFileExistsSync')
 const initDirectories = require('./tools/initDirectories')
+let repoPath
 
 // TODO : Gérer les arguments
 const fileName = process.argv[2] || 'src/component_list.xlsx'
 
 // TODO : Install debug inside the project
 
+// Check if the file passed in argument exists
 if (!checkFileExistsSync(fileName)) {
   let fileInsideSrcDirectory = shell.ls('src')
-
-  debug('File inside src folder :')
-  _.each(fileInsideSrcDirectory, function (file) {
-    debug(chalk.green(file))
-  })
-
-  console.log(chalk.red('File \'' + fileName + ' \'doesn\'t exist...'))
-  console.log(chalk.white('Check inside your src folder if file exist or launch this command \'DEBUG=* node index.js\' to take a look inside src folder.'))
 
   // Exit script
   process.exit()
 } else {
+  // Reading XLSX file
   const workbook = XLSX.readFile(fileName)
+
+  // Getting sheets
   const sheetNameList = workbook.SheetNames
 
-  // var componentResult = ''
   var componentResult = []
-
   let blockList = []
 
-   // Initialisation du projet
-  // let directories = sheetNameList
-
-  initDirectories(sheetNameList)
+  // Initialization of the project
+  repoPath = initDirectories(fileName, sheetNameList)
 
   let componentIterate = 0
   for (let i = 0; i < sheetNameList.length; i++) {
@@ -77,28 +71,28 @@ if (!checkFileExistsSync(fileName)) {
 
       switch (value._component) {
         case 'narrative':
-          makeNarrative(value, sheetNameList[i], componentResult)
+          makeNarrative(value, repoPath, sheetNameList[i], componentResult)
           break
         case 'multicam':
-          makeMultiCam(value, sheetNameList[i], componentResult)
+          makeMultiCam(value, repoPath, sheetNameList[i], componentResult)
           break
         case 'media':
-          makeMedia(value, sheetNameList[i], componentResult)
+          makeMedia(value, repoPath, sheetNameList[i], componentResult)
           break
         case 'mcq':
-          makeMCQ(value, sheetNameList[i], componentResult)
+          makeMCQ(value, repoPath, sheetNameList[i], componentResult)
           break
         case 'intro-anchor':
-          makeIntroAnchor(value, sheetNameList[i], componentResult)
+          makeIntroAnchor(value, repoPath, sheetNameList[i], componentResult)
           break
         case 'scrolling':
-          makeScrolling(value, sheetNameList[i], componentResult)
+          makeScrolling(value, repoPath, sheetNameList[i], componentResult)
           break
         case 'graphic':
-          makeGraphic(value, sheetNameList[i], componentResult)
+          makeGraphic(value, repoPath, sheetNameList[i], componentResult)
           break
         case 'hotgraphic':
-          makeHotGraphic(value, sheetNameList[i], componentResult)
+          makeHotGraphic(value, repoPath, sheetNameList[i], componentResult)
           break
         case undefined:
 
@@ -107,9 +101,8 @@ if (!checkFileExistsSync(fileName)) {
           process.exit()
           break
         default:
-          makeComponent(value, sheetNameList[i], componentResult)
+          makeComponent(value, repoPath, sheetNameList[i], componentResult)
       }
-
       // console.log(componentResult[componentIterate])
       // console.log('-----')
       blockList.push(componentResult[componentIterate]._parentId)
@@ -117,7 +110,7 @@ if (!checkFileExistsSync(fileName)) {
     })
   }
 
-  fsExtra.writeJsonSync('result/componentResult.json', componentResult, 'utf-8', function (err) {
+  fsExtra.writeJsonSync(path.join(repoPath, 'componentResult.json'), componentResult, 'utf-8', function (err) {
     console.log('err', err)
   })
 
@@ -127,5 +120,5 @@ if (!checkFileExistsSync(fileName)) {
   })
 
   // Ecriture du fichier block.json
-  makeBlock(blockList)
+  makeBlock(repoPath,blockList)
 }

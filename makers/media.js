@@ -1,5 +1,6 @@
 const _ = require('lodash')
 const fsExtra = require('fs-extra')
+const path = require('path')
 
 // const jsonFormat = require('json-format')
 
@@ -8,7 +9,7 @@ const cleanText = require('./../tools/cleanText')
 
 const debug = require('debug')('makerMedia')
 
-function makeMedia (value, directory, componentResult) {
+function makeMedia (value, repoPath, directory, componentResult) {
   debug('mediaMaker')
 
   let file = fsExtra.readJsonSync('model/' + value._component + '.json', 'utf-8')
@@ -26,7 +27,7 @@ function makeMedia (value, directory, componentResult) {
 
   componentResult.push(file)
 
-  fsExtra.writeJsonSync('result/' + directory + '/' + value._component + '_' + value._id + '.json', file, 'utf-8')
+  fsExtra.writeJsonSync(path.join(repoPath, directory, value._component + '_' + value._id + '.json'), file, 'utf-8')
 }
 
 module.exports = makeMedia
